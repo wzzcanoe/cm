@@ -14,7 +14,7 @@ public interface UserMapper {
 	List<User> getAll();
 	
 	@Select("SELECT * FROM user WHERE id = #{id}")
-	User getOne(int id);
+	User getOne(long id);
 
 	@Insert("INSERT INTO user(id, name) VALUES(#{id}, #{name})")
 	void insert(User user);
@@ -23,6 +23,6 @@ public interface UserMapper {
 	void update(User user);
 
 	@Delete("DELETE FROM user WHERE id = #{id}")
-	void delete(int id);
+	void delete(long id);
 
 }
