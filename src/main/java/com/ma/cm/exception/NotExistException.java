@@ -6,18 +6,18 @@ public abstract class NotExistException extends RuntimeException {
 	 */
 	private static final long serialVersionUID = -6778921562404140643L;
 
-	private long id;
+	private String id;
 
-	public NotExistException(Class<?> cls, long id) {
-		super(String.format("%s %d is not exist!", cls.getSimpleName(), id));
+	public NotExistException(Class<?> cls, String id) {
+		super(String.format("%s %s is not exist!", cls.getSimpleName(), id));
 		this.id = id;
 	}
 
-	public long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 }

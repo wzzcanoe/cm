@@ -10,8 +10,17 @@ public class Product implements Serializable {
 	private static final long serialVersionUID = -6876888616887744373L;
 
 	private long id;
-	
+
 	private String name;
+
+	public Product() {
+
+	}
+
+	public Product(long id, String name) {
+		this.id = id;
+		this.name = name;
+	}
 
 	public long getId() {
 		return id;
@@ -28,5 +37,5 @@ public class Product implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 }

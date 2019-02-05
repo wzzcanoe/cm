@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ma.cm.entity.Product;
 import com.ma.cm.exception.ProductNotExistException;
-import com.ma.cm.exception.UserNotExistException;
+import com.ma.cm.mapper.ColumnMapper;
 import com.ma.cm.mapper.ProductMapper;
 
 @Service
@@ -16,6 +16,9 @@ public class ProductService {
 
 	@Autowired
 	private ProductMapper productMapper;
+	
+	@Autowired
+	private ColumnMapper columnMapper;
 
 	@Transactional
 	public List<Product> gets() {
@@ -50,6 +53,11 @@ public class ProductService {
 
 	@Transactional
 	public void delete(long id) {
+		Product product = productMapper.getOne(id);
+		if (null == product) {
+			throw new ProductNotExistException(id);
+		}
 		productMapper.delete(id);
+		columnMapper.deleteByProduct(id);
 	}
 }

@@ -49,6 +49,10 @@ public class UserService {
 
 	@Transactional
 	public void delete(long id) {
+		User user = userMapper.getOne(id);
+		if (null == user) {
+			throw new UserNotExistException(id);
+		}
 		userMapper.delete(id);
 	}
 }
