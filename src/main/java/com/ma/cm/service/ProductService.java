@@ -2,23 +2,13 @@ package com.ma.cm.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ma.cm.entity.Product;
-import com.ma.cm.exception.ProductNotExistException;
-import com.ma.cm.mapper.ColumnMapper;
-import com.ma.cm.mapper.ProductMapper;
 
 @Service
-public class ProductService {
-
-	@Autowired
-	private ProductMapper productMapper;
-	
-	@Autowired
-	private ColumnMapper columnMapper;
+public class ProductService extends AService {
 
 	@Transactional
 	public List<Product> gets() {
@@ -34,30 +24,26 @@ public class ProductService {
 
 	@Transactional
 	public Product get(long id) {
+		checkProductExist(id);
 		Product product = productMapper.getOne(id);
-		if (null == product) {
-			throw new ProductNotExistException(id);
-		}
 		return product;
 	}
 
 	@Transactional
 	public Product update(Product product) {
+		checkProductExist(product.getId());
 		productMapper.update(product);
 		Product updatedProduct = productMapper.getOne(product.getId());
-		if (null == updatedProduct) {
-			throw new ProductNotExistException(product.getId());
-		}
 		return updatedProduct;
 	}
 
 	@Transactional
 	public void delete(long id) {
-		Product product = productMapper.getOne(id);
-		if (null == product) {
-			throw new ProductNotExistException(id);
-		}
-		productMapper.delete(id);
+		checkProductExist(id);
+		columnContentMapper.deleteByProduct(id);
+		contentMapper.deleteByProduct(id);
 		columnMapper.deleteByProduct(id);
+		productMapper.delete(id);
+		
 	}
 }

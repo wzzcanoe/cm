@@ -16,6 +16,60 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `column_`
+--
+
+DROP TABLE IF EXISTS `column_`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `column_` (
+  `productId` int(11) NOT NULL,
+  `columnId` int(11) NOT NULL,
+  `name` varchar(45) DEFAULT NULL,
+  `type` int(6) DEFAULT NULL,
+  `poster` varchar(255) DEFAULT NULL,
+  `link` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`productId`,`columnId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `column_content`
+--
+
+DROP TABLE IF EXISTS `column_content`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `column_content` (
+  `productId` int(11) NOT NULL,
+  `columnId` int(11) NOT NULL,
+  `contentId` int(11) NOT NULL,
+  `position` int(11) DEFAULT NULL,
+  PRIMARY KEY (`productId`,`columnId`,`contentId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `content`
+--
+
+DROP TABLE IF EXISTS `content`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `content` (
+  `productId` int(11) NOT NULL,
+  `contentId` int(11) NOT NULL,
+  `poster` varchar(255) DEFAULT NULL,
+  `icon` varchar(255) DEFAULT NULL,
+  `screenShot` varchar(255) DEFAULT NULL,
+  `type` int(6) DEFAULT NULL,
+  `link` varchar(255) DEFAULT NULL,
+  `tip` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`contentId`,`productId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `product`
 --
 
@@ -52,4 +106,4 @@ CREATE TABLE `user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-02-03 21:28:33
+-- Dump completed on 2019-02-08 22:52:17

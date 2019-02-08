@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ma.cm.mapper.ColumnContentMapper">
+	<resultMap id="ColumnContentMap" type="ColumnContent" >
+		<id property="productId" column="productId" />
+		<id property="columnId" column="columnId" />
+		<id property="contentId" column="contentId" />
+		<result property="position" column="position" />
+		<association property="content" javaType="Content" >
+			<id property="productId" column="productId" />
+			<id property="contentId" column="contentId" />
+			<result property="poster" column="poster" />
+			<result property="icon" column="icon" />
+			<result property="screenShot" column="screenShot" />
+			<result property="type" column="type" />
+			<result property="link" column="link" />
+			<result property="tip" column="tip" />
+		</association>
+	</resultMap>
+
+	<select id="getByProductByColumn" resultType="ColumnContent">
+		SELECT * FROM column_content
+		WHERE productId = #{productId} AND columnId = #{columnId}
+		ORDER BY position
+	</select>
+
+	<select id="getByProductByContent" resultType="ColumnContent">
+		SELECT * FROM column_content
+		WHERE productId = #{productId} AND contentId = #{contentId}
+		ORDER BY position
+	</select>
+	
+	<select id="getDetailsByProductByColumn" resultMap="ColumnContentMap">
+		SELECT
+		cc.productId AS productId,
+		columnId,
+		cc.contentId As contentId,
+		position,
+		poster,
+		icon,
+		screenShot,
+		type,
+		link,
+		tip
+		FROM column_content cc JOIN content c 
+		ON cc.productId = c.productId AND cc.contentId = c.contentId
+		WHERE cc.productId = #{productId} AND cc.columnId = #{columnId}
+		ORDER BY position
+	</select>
+</mapper>

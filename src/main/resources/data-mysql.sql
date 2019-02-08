@@ -16,12 +16,42 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Dumping data for table `column_`
+--
+
+LOCK TABLES `column_` WRITE;
+/*!40000 ALTER TABLE `column_` DISABLE KEYS */;
+INSERT INTO `column_` VALUES (1,1,'test',0,NULL,NULL),(1,2,'111',0,NULL,NULL);
+/*!40000 ALTER TABLE `column_` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `column_content`
+--
+
+LOCK TABLES `column_content` WRITE;
+/*!40000 ALTER TABLE `column_content` DISABLE KEYS */;
+INSERT INTO `column_content` VALUES (1,1,2,455),(1,1,3,444),(1,2,1,NULL);
+/*!40000 ALTER TABLE `column_content` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `content`
+--
+
+LOCK TABLES `content` WRITE;
+/*!40000 ALTER TABLE `content` DISABLE KEYS */;
+INSERT INTO `content` VALUES (1,1,NULL,NULL,NULL,NULL,NULL,NULL),(1,2,NULL,NULL,NULL,NULL,NULL,NULL),(1,3,NULL,NULL,NULL,NULL,NULL,NULL),(1,4,NULL,NULL,NULL,NULL,NULL,NULL);
+/*!40000 ALTER TABLE `content` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Dumping data for table `product`
 --
 
 LOCK TABLES `product` WRITE;
 /*!40000 ALTER TABLE `product` DISABLE KEYS */;
-INSERT INTO `product` VALUES (1,'王者乐园');
+INSERT INTO `product` VALUES (1,'zjy333'),(2,'zjy'),(3,'zjy333');
 /*!40000 ALTER TABLE `product` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -44,4 +74,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-02-03 21:30:28
+-- Dump completed on 2019-02-08 22:52:34
