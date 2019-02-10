@@ -1,6 +1,7 @@
 package cm.ma.cm.controller;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.net.URI;
@@ -269,5 +270,47 @@ public class ContentControllerTest extends AControllerTest{
 			assertNotNull(body.get("error"));
 			assertEquals(HttpStatus.NOT_FOUND.value(), body.get("status"));
 		}
+	}
+
+	@Test
+	public void testAutoIncrement() {
+		String productName = "test";
+		Product product = new Product(productId, productName);
+		int contentType = 0;
+		String contentPoster = "demo.pic";
+		String contentLink = "demo.html";
+		String contentIcon = "demo.icon";
+		String contentScreenShot ="demo.screenShot";
+		String contentTip = "demo.tip";
+		Content content = new Content(productId, contentPoster, contentIcon, contentScreenShot, contentType, contentLink, contentTip);
+		
+		// post a product
+		restTemplate.postForObject(productUri, product, Product.class);
+
+		// get contents from the product
+		Content[] results = restTemplate.getForObject(contentUri, Content[].class);
+		int contentCountBefore = results.length;
+
+		// post a content
+		Content result = restTemplate.postForObject(contentUri, content, Content.class);
+		assertEquals(productId, result.getProductId());
+		assertNotEquals(0, result.getContentId());
+		assertEquals(contentType, result.getType());
+		assertEquals(contentPoster, result.getPoster());
+		assertEquals(contentIcon, result.getIcon());
+		assertEquals(contentScreenShot, result.getScreenShot());
+		assertEquals(contentLink, result.getLink());
+		assertEquals(contentTip, result.getTip());
+		
+		// get contents from the product
+		results = restTemplate.getForObject(contentUri, Content[].class);
+		assertEquals(contentCountBefore + 1, results.length);
+		
+		// delete the content
+		restTemplate.delete(String.format("%s/%d", contentUri, result.getContentId()));
+		
+		// get contents from the product
+		results = restTemplate.getForObject(contentUri, Content[].class);
+		assertEquals(contentCountBefore, results.length);
 	}
 }

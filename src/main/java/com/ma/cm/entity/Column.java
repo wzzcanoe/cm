@@ -36,6 +36,14 @@ public class Column implements Serializable{
 		this.poster = poster;
 		this.link = link;
 	}
+	
+	public Column(long productId, String name, int type, String poster, String link) {
+		this.productId = productId;
+		this.name = name;
+		this.type = type;
+		this.poster = poster;
+		this.link = link;
+	}
 
 	public String getName() {
 		return name;

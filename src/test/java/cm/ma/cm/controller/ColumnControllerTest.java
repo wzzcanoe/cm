@@ -1,6 +1,7 @@
 package cm.ma.cm.controller;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.net.URI;
@@ -22,7 +23,7 @@ import com.ma.cm.entity.Product;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ColumnControllerTest extends AControllerTest{
+public class ColumnControllerTest extends AControllerTest {
 
 	@Test
 	public void testFunction() throws URISyntaxException {
@@ -250,5 +251,43 @@ public class ColumnControllerTest extends AControllerTest{
 			assertNotNull(body.get("error"));
 			assertEquals(HttpStatus.NOT_FOUND.value(), body.get("status"));
 		}
+	}
+
+	@Test
+	public void testAutoIncrement() {
+		String productName = "test";
+		Product product = new Product(productId, productName);
+		String columnName = "test";
+		int columnType = 0;
+		String columnPoster = "demo.pic";
+		String columnLink = "demo.html";
+		Column column = new Column(productId, columnName, columnType, columnPoster, columnLink);
+
+		// post a product
+		restTemplate.postForObject(productUri, product, Product.class);
+
+		// get columns from the product
+		Column[] results = restTemplate.getForObject(columnUri, Column[].class);
+		int columnCountBefore = results.length;
+
+		// post a column
+		Column result = restTemplate.postForObject(columnUri, column, Column.class);
+		assertEquals(productId, result.getProductId());
+		assertNotEquals(0, result.getColumnId());
+		assertEquals(columnName, result.getName());
+		assertEquals(columnType, result.getType());
+		assertEquals(columnPoster, result.getPoster());
+		assertEquals(columnLink, result.getLink());
+		
+		// get columns from the product
+		results = restTemplate.getForObject(columnUri, Column[].class);
+		assertEquals(columnCountBefore + 1, results.length);
+		
+		// delete the column
+		restTemplate.delete(String.format("%s/%d", columnUri, result.getColumnId()));
+		
+		// get columns from the product
+		results = restTemplate.getForObject(columnUri, Column[].class);
+		assertEquals(columnCountBefore, results.length);
 	}
 }

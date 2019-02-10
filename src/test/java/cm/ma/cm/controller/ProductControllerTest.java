@@ -1,6 +1,7 @@
 package cm.ma.cm.controller;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.net.URI;
@@ -134,5 +135,33 @@ public class ProductControllerTest extends AControllerTest{
 			assertEquals(HttpStatus.NOT_FOUND.value(), body.get("status"));
 			assertEquals(productErrorId, body.get("id"));
 		}
+	}
+	
+	@Test
+	public void testAutoIncrement() {
+		String name = "test";
+		Product product = new Product(name);
+
+		// gets
+		Product[] products = restTemplate.getForObject(productUri, Product[].class);
+		int before_post_count = products.length;
+
+		// post
+		Product result = restTemplate.postForObject(productUri, product, Product.class);
+		assertNotEquals(0, result.getId());
+		assertEquals(name, result.getName());
+
+		// gets
+		products = restTemplate.getForObject(productUri, Product[].class);
+		int after_post_count = products.length;
+		assertEquals(before_post_count + 1, after_post_count);
+		
+		// delete
+		restTemplate.delete(String.format("%s/%d", productUri, result.getId()));
+
+		// gets
+		products = restTemplate.getForObject(productUri, Product[].class);
+		int after_delete_count = products.length;
+		assertEquals(before_post_count, after_delete_count);
 	}
 }

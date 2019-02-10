@@ -23,14 +23,14 @@ DROP TABLE IF EXISTS `column_`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `column_` (
+  `columnId` int(11) NOT NULL AUTO_INCREMENT,
   `productId` int(11) NOT NULL,
-  `columnId` int(11) NOT NULL,
   `name` varchar(45) DEFAULT NULL,
   `type` int(6) DEFAULT NULL,
   `poster` varchar(255) DEFAULT NULL,
   `link` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`productId`,`columnId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`columnId`,`productId`)
+) ENGINE=InnoDB AUTO_INCREMENT=1000005 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -57,8 +57,8 @@ DROP TABLE IF EXISTS `content`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `content` (
+  `contentId` int(11) NOT NULL AUTO_INCREMENT,
   `productId` int(11) NOT NULL,
-  `contentId` int(11) NOT NULL,
   `poster` varchar(255) DEFAULT NULL,
   `icon` varchar(255) DEFAULT NULL,
   `screenShot` varchar(255) DEFAULT NULL,
@@ -66,7 +66,7 @@ CREATE TABLE `content` (
   `link` varchar(255) DEFAULT NULL,
   `tip` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`contentId`,`productId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1000004 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -77,10 +77,10 @@ DROP TABLE IF EXISTS `product`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `product` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1000009 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -91,10 +91,10 @@ DROP TABLE IF EXISTS `user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `user` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1000002 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -106,4 +106,4 @@ CREATE TABLE `user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-02-08 22:52:17
+-- Dump completed on 2019-02-10 23:27:06

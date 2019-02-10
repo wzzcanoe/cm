@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -18,7 +19,15 @@ public interface ColumnMapper {
 	@Select("SELECT * FROM column_ WHERE productId = #{productId} AND columnId = #{columnId}")
 	Column getOne(@Param(value = "productId") long productId, @Param(value = "columnId") long columnId);
 
-	@Insert("INSERT INTO column_(productId, columnId, name, type, poster, link) VALUES(#{productId}, #{columnId}, #{name}, #{type}, #{poster}, #{link})")
+	@Insert("<script>"
+			+ "<if test='columnId == 0'>"
+			+ "INSERT INTO column_(productId, name, type, poster, link) VALUES(#{productId}, #{name}, #{type}, #{poster}, #{link})"
+			+ "</if>"
+			+ "<if test='columnId != 0'>"
+			+ "INSERT INTO column_(productId, columnId, name, type, poster, link) VALUES(#{productId}, #{columnId}, #{name}, #{type}, #{poster}, #{link})"
+			+ "</if>"
+			+ "</script>")
+	@Options(useGeneratedKeys = true, keyProperty="columnId", keyColumn="columnId")
 	void insert(Column column);
 
 	@Update("UPDATE column_ SET name=#{name}, type=#{type}, poster=#{poster}, link=#{link} WHERE productId=#{productId} AND columnId = #{columnId}")

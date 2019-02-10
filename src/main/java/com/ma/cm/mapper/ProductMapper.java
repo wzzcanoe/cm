@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
@@ -17,7 +18,15 @@ public interface ProductMapper {
 	@Select("SELECT * FROM product WHERE id = #{id}")
 	Product getOne(long id);
 
-	@Insert("INSERT INTO product(id, name) VALUES(#{id}, #{name})")
+	@Insert("<script>"
+			+ "<if test='id == 0'>"
+			+ "INSERT INTO product(name) VALUES(#{name})"
+			+ "</if>"
+			+ "<if test='id != 0'>"
+			+ "INSERT INTO product(id, name) VALUES(#{id}, #{name})"
+			+ "</if>"
+			+ "</script>")
+	@Options(useGeneratedKeys = true, keyProperty="id", keyColumn="id")
 	void insert(Product user);
 
 	@Update("UPDATE product SET name=#{name} WHERE id = #{id}")

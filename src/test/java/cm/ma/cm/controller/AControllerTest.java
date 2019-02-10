@@ -36,6 +36,8 @@ public abstract class AControllerTest {
 	protected String columnContentUri = String.format("%s/contents", columnUriWithId);
 
 	protected String columnContentUriWithId = String.format("%s/%d", columnContentUri, contentId);
+
+	protected String columnContentUriWithDetail = String.format("%s?detail", columnContentUri);
 	
 
 	protected String productErrorId = String.valueOf(productId);

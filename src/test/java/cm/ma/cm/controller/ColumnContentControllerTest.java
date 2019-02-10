@@ -332,4 +332,48 @@ public class ColumnContentControllerTest extends AControllerTest{
 		}
 	}
 	
+	@Test
+	public void testDetail() {
+		String productName = "test";
+		Product product = new Product(productId, productName);
+		String columnName = "test";
+		int columnType = 1;
+		String columnPoster = "poster";
+		String columnLink = "link";
+		Column column = new Column(productId, columnId, columnName, columnType, columnPoster, columnLink);
+		int contentType = 0;
+		String contentPoster = "demo.pic";
+		String contentLink = "demo.html";
+		String contentIcon = "demo.icon";
+		String contentScreenShot ="demo.screenShot";
+		String contentTip = "demo.tip";
+		Content content = new Content(productId, contentId, contentPoster, contentIcon, contentScreenShot, contentType, contentLink, contentTip);
+		long position = 9;
+		ColumnContent columnContent = new ColumnContent(productId, columnId, contentId, position);
+		
+		{
+			restTemplate.postForObject(productUri, product, Product.class);
+			restTemplate.postForObject(columnUri, column, Column.class);
+			restTemplate.postForObject(contentUri, content, Content.class);
+			restTemplate.postForObject(columnContentUri, columnContent, ColumnContent.class);
+		}
+		{
+			ColumnContent[] results = restTemplate.getForObject(columnContentUriWithDetail, ColumnContent[].class);
+			assertEquals(1, results.length);
+			ColumnContent result = results[0];
+			assertEquals(productId, result.getProductId());
+			assertEquals(columnId, result.getColumnId());
+			assertEquals(contentId, result.getContentId());
+			assertEquals(position, result.getPosition());	
+			assertNotNull(result.getContent());
+			assertEquals(productId, result.getContent().getProductId());
+			assertEquals(contentId, result.getContent().getContentId());
+			assertEquals(contentType, result.getContent().getType());
+			assertEquals(contentPoster, result.getContent().getPoster());
+			assertEquals(contentIcon, result.getContent().getIcon());
+			assertEquals(contentScreenShot, result.getContent().getScreenShot());
+			assertEquals(contentLink, result.getContent().getLink());
+			assertEquals(contentTip, result.getContent().getTip());
+		}
+	}
 }
