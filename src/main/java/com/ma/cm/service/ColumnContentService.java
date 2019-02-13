@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ma.cm.entity.ColumnContent;
+import com.ma.cm.exception.ForbiddenException;
 
 @Service
 public class ColumnContentService extends AService{
@@ -19,40 +20,52 @@ public class ColumnContentService extends AService{
 	@Transactional
 	public List<ColumnContent> getDetailsByProductByColumn(long productId, long columnId) {
 		checkColumnExist(productId, columnId);
-		return columnContentMapper.getDetailsByProductByColumn(productId, columnId);
+		List<ColumnContent> contents = columnContentMapper.getDetailContentsByProductByColumn(productId, columnId);
+		for (ColumnContent columnContent : contents) {
+			columnContent.setChildColumn(null);
+		}
+		List<ColumnContent> columns = columnContentMapper.getDetailColumnsByProductByColumn(productId, columnId);
+		for (ColumnContent columnContent : columns) {
+			columnContent.setContent(null);
+		}
+		contents.addAll(columns);
+		contents.sort(new ColumnContent.ColumnContentPositionComparator());
+		return contents;
 	}
 
 	@Transactional
 	public ColumnContent save(ColumnContent columnContent) {
-		// TODO havnt handle "treat the column as a content" case
 		checkColumnExist(columnContent.getProductId(), columnContent.getColumnId());
-		checkContentExist(columnContent.getProductId(), columnContent.getContentId());
+		if (columnContent.getType() == 0) {
+			checkContentExist(columnContent.getProductId(), columnContent.getContentId());
+		} else if (columnContent.getType() == 1){
+			checkColumnExist(columnContent.getProductId(), columnContent.getContentId());
+		} else {
+			throw new ForbiddenException(String.format("type %d is invalid for ColumnContent", columnContent.getType()));
+		}
 		columnContentMapper.insert(columnContent);
-		ColumnContent result = columnContentMapper.getOne(columnContent.getProductId(), columnContent.getColumnId(), columnContent.getContentId());
+		ColumnContent result = columnContentMapper.getOne(columnContent.getProductId(), columnContent.getColumnId(), columnContent.getType(), columnContent.getContentId());
 		return result;
 	}
 
 	@Transactional
-	public ColumnContent get(long productId, long columnId, long contentId) {
-		// TODO havnt handle "treat the column as a content" case
-		checkColumnContentExist(productId, columnId, contentId);
-		ColumnContent result = columnContentMapper.getOne(productId, columnId, contentId);
+	public ColumnContent get(long productId, long columnId, int type, long contentId) {
+		checkColumnContentExist(productId, columnId, type, contentId);
+		ColumnContent result = columnContentMapper.getOne(productId, columnId, type, contentId);
 		return result;
 	}
 
 	@Transactional
 	public ColumnContent update(ColumnContent columnContent) {
-		// TODO havnt handle "treat the column as a content" case
-		checkColumnContentExist(columnContent.getProductId(), columnContent.getColumnId(), columnContent.getContentId());
+		checkColumnContentExist(columnContent.getProductId(), columnContent.getColumnId(), columnContent.getType(), columnContent.getContentId());
 		columnContentMapper.update(columnContent);
-		ColumnContent result = columnContentMapper.getOne(columnContent.getProductId(), columnContent.getColumnId(), columnContent.getContentId());
+		ColumnContent result = columnContentMapper.getOne(columnContent.getProductId(), columnContent.getColumnId(), columnContent.getType(), columnContent.getContentId());
 		return result;
 	}
 
 	@Transactional
-	public void delete(long productId, long columnId, long contentId) {
-		// TODO havnt handle "treat the column as a content" case
-		checkColumnContentExist(productId, columnId, contentId);
-		columnContentMapper.delete(productId, columnId, contentId);
+	public void delete(long productId, long columnId, int type, long contentId) {
+		checkColumnContentExist(productId, columnId, type, contentId);
+		columnContentMapper.delete(productId, columnId, type, contentId);
 	}
 }

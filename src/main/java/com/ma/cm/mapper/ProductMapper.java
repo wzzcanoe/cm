@@ -20,16 +20,16 @@ public interface ProductMapper {
 
 	@Insert("<script>"
 			+ "<if test='id == 0'>"
-			+ "INSERT INTO product(name) VALUES(#{name})"
+			+ "INSERT INTO product(name, options) VALUES(#{name}, #{options})"
 			+ "</if>"
 			+ "<if test='id != 0'>"
-			+ "INSERT INTO product(id, name) VALUES(#{id}, #{name})"
+			+ "INSERT INTO product(id, name, options) VALUES(#{id}, #{name}, #{options})"
 			+ "</if>"
 			+ "</script>")
 	@Options(useGeneratedKeys = true, keyProperty="id", keyColumn="id")
 	void insert(Product user);
 
-	@Update("UPDATE product SET name=#{name} WHERE id = #{id}")
+	@Update("UPDATE product SET name=#{name}, options=#{options} WHERE id = #{id}")
 	void update(Product user);
 
 	@Delete("DELETE FROM product WHERE id = #{id}")

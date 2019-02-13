@@ -26,10 +26,8 @@ public class ProductControllerTest extends AControllerTest{
 
 	@Test
 	public void testFunction() throws URISyntaxException {
-		String name = "test";
 		String changedName = "test-changed";
-		Product product = new Product(productId, name);
-		String urlWithId = String.format("http://localhost:%d%s", port, productUriWithId);
+		String urlWithId = String.format("http://localhost:%d%s%s", port, contextPath, productUriWithId);
 
 		// gets
 		Product[] products = restTemplate.getForObject(productUri, Product[].class);
@@ -38,7 +36,8 @@ public class ProductControllerTest extends AControllerTest{
 		// post
 		Product result = restTemplate.postForObject(productUri, product, Product.class);
 		assertEquals(productId, result.getId());
-		assertEquals(name, result.getName());
+		assertEquals(productName, result.getName());
+		assertEquals(proudctOptions, result.getOptions());
 
 		// gets
 		products = restTemplate.getForObject(productUri, Product[].class);
@@ -48,7 +47,8 @@ public class ProductControllerTest extends AControllerTest{
 		// get
 		result = restTemplate.getForObject(productUriWithId, Product.class);
 		assertEquals(productId, result.getId());
-		assertEquals(name, result.getName());
+		assertEquals(productName, result.getName());
+		assertEquals(proudctOptions, result.getOptions());
 
 		// put
 		product.setName(changedName);
@@ -59,6 +59,8 @@ public class ProductControllerTest extends AControllerTest{
 		assertEquals(HttpStatus.OK, putResult.getStatusCode());
 		assertEquals(productId, updatedProduct.getId());
 		assertEquals(changedName, updatedProduct.getName());
+		assertEquals(proudctOptions, result.getOptions());
+		product.setName(productName);
 
 		// get
 		result = restTemplate.getForObject(productUriWithId, Product.class);
@@ -77,14 +79,12 @@ public class ProductControllerTest extends AControllerTest{
 
 	@Test
 	public void testMultiKey() throws URISyntaxException {
-		String name = "test";
-		Product product = new Product(productId, name);
-		String url = String.format("http://localhost:%d%s", port, productUri);
+		String url = String.format("http://localhost:%d%s%s", port, contextPath, productUri);
 		{
 			// post
 			Product result = restTemplate.postForObject(productUri, product, Product.class);
 			assertEquals(productId, result.getId());
-			assertEquals(name, result.getName());
+			assertEquals(productName, result.getName());
 		}
 		{
 			// post again
@@ -100,8 +100,7 @@ public class ProductControllerTest extends AControllerTest{
 
 	@Test
 	public void testNotFound() throws URISyntaxException {
-		String urlWithId = String.format("http://localhost:%d%s", port, productUriWithId);
-		Product product = new Product(productId, "testNotFound");
+		String urlWithId = String.format("http://localhost:%d%s%s", port, contextPath, productUriWithId);
 		{
 			// get not found
 			RequestEntity<Void> request = RequestEntity.get(new URI(urlWithId)).accept(MediaType.APPLICATION_JSON)
@@ -139,9 +138,8 @@ public class ProductControllerTest extends AControllerTest{
 	
 	@Test
 	public void testAutoIncrement() {
-		String name = "test";
-		Product product = new Product(name);
 
+		Product product = new Product(productName, proudctOptions);
 		// gets
 		Product[] products = restTemplate.getForObject(productUri, Product[].class);
 		int before_post_count = products.length;
@@ -149,7 +147,7 @@ public class ProductControllerTest extends AControllerTest{
 		// post
 		Product result = restTemplate.postForObject(productUri, product, Product.class);
 		assertNotEquals(0, result.getId());
-		assertEquals(name, result.getName());
+		assertEquals(productName, result.getName());
 
 		// gets
 		products = restTemplate.getForObject(productUri, Product[].class);

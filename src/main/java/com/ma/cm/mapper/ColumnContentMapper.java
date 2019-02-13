@@ -14,21 +14,25 @@ public interface ColumnContentMapper {
 
 	List<ColumnContent> getByProductByColumn(@Param(value = "productId") long productId, @Param(value = "columnId") long columnId);
 	
-	List<ColumnContent> getByProductByContent(@Param(value = "productId") long productId, @Param(value = "contentId") long contentId);
+	List<ColumnContent> getByProductByContentByType0(@Param(value = "productId") long productId, @Param(value = "contentId") long contentId);
 	
-	List<ColumnContent> getDetailsByProductByColumn(@Param(value = "productId") long productId, @Param(value = "columnId") long columnId);
+	List<ColumnContent> getByProductByContentByType1(@Param(value = "productId") long productId, @Param(value = "contentId") long contentId);
 	
-	@Select("SELECT * FROM column_content WHERE productId = #{productId} AND columnId = #{columnId} AND contentId = #{contentId}")
-	ColumnContent getOne(@Param(value = "productId") long productId, @Param(value = "columnId") long columnId, @Param(value = "contentId") long contentId);
+	List<ColumnContent> getDetailContentsByProductByColumn(@Param(value = "productId") long productId, @Param(value = "columnId") long columnId);
 
-	@Insert("INSERT INTO column_content(productId, columnId, contentId, position) VALUES(#{productId}, #{columnId}, #{contentId}, #{position})")
+	List<ColumnContent> getDetailColumnsByProductByColumn(@Param(value = "productId") long productId, @Param(value = "columnId") long columnId);
+
+	@Select("SELECT * FROM column_content WHERE productId = #{productId} AND columnId = #{columnId} AND type = #{type} AND contentId = #{contentId}")
+	ColumnContent getOne(@Param(value = "productId") long productId, @Param(value = "columnId") long columnId, @Param(value = "type") long type, @Param(value = "contentId") long contentId);
+
+	@Insert("INSERT INTO column_content(productId, columnId, type, contentId, position) VALUES(#{productId}, #{columnId}, #{type}, #{contentId}, #{position})")
 	void insert(ColumnContent columnContent);
 
-	@Update("UPDATE column_content SET position=#{position} WHERE productId = #{productId} AND columnId = #{columnId} AND contentId = #{contentId}")
+	@Update("UPDATE column_content SET position=#{position} WHERE productId = #{productId} AND columnId = #{columnId} AND type = #{type} AND contentId = #{contentId}")
 	void update(ColumnContent column);
 
-	@Delete("DELETE FROM column_content WHERE productId = #{productId} AND columnId = #{columnId} AND contentId = #{contentId}")
-	void delete(@Param(value = "productId") long productId, @Param(value = "columnId") long columnId, @Param(value = "contentId") long contentId);
+	@Delete("DELETE FROM column_content WHERE productId = #{productId} AND columnId = #{columnId} AND type = #{type} AND contentId = #{contentId}")
+	void delete(@Param(value = "productId") long productId, @Param(value = "columnId") long columnId, @Param(value = "type") long type, @Param(value = "contentId") long contentId);
 
 	@Delete("DELETE FROM column_content WHERE productId = #{productId} AND columnId = #{columnId}")
 	void deleteByProductByColumn(@Param(value = "productId") long productId, @Param(value = "columnId") long columnId);

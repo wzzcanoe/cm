@@ -9,6 +9,7 @@ import com.ma.cm.entity.Product;
 import com.ma.cm.exception.ColumnContentNotExistException;
 import com.ma.cm.exception.ColumnNotExistException;
 import com.ma.cm.exception.ContentNotExistException;
+import com.ma.cm.exception.ForbiddenException;
 import com.ma.cm.exception.ProductNotExistException;
 import com.ma.cm.mapper.ColumnContentMapper;
 import com.ma.cm.mapper.ColumnMapper;
@@ -52,12 +53,18 @@ public abstract class AService {
 		}
 	}
 
-	protected void checkColumnContentExist(long productId, long columnId, long contentId) {
+	protected void checkColumnContentExist(long productId, long columnId, int type, long contentId) {
 		checkColumnExist(productId, columnId);
-		checkContentExist(productId, contentId);
-		ColumnContent columnContent = columnContentMapper.getOne(productId, columnId, contentId);
+		if (type == ColumnContent.TYPE_CONTENT) {
+			checkContentExist(productId, contentId);
+		} else if (type ==  ColumnContent.TYPE_CHILD_COLUMN){
+			checkColumnExist(productId, contentId);
+		} else {
+			throw new ForbiddenException(String.format("type %d is invalid for ColumnContent", type));
+		}
+		ColumnContent columnContent = columnContentMapper.getOne(productId, columnId, type, contentId);
 		if (null == columnContent) {
-			throw new ColumnContentNotExistException(productId, columnId, contentId);
+			throw new ColumnContentNotExistException(productId, columnId, type, contentId);
 		}
 	}
 }

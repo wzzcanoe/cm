@@ -12,18 +12,22 @@ public class Product implements Serializable {
 	private long id;
 
 	private String name;
+	
+	private String options;
 
 	public Product() {
 
 	}
 
-	public Product(long id, String name) {
+	public Product(long id, String name, String options) {
 		this.id = id;
 		this.name = name;
+		this.options = options;
 	}
 
-	public Product(String name) {
+	public Product(String name, String options) {
 		this.name = name;
+		this.options = options;
 	}
 
 	public long getId() {
@@ -40,6 +44,14 @@ public class Product implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getOptions() {
+		return options;
+	}
+
+	public void setOptions(String options) {
+		this.options = options;
 	}
 
 }

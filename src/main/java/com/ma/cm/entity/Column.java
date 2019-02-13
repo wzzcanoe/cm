@@ -24,25 +24,29 @@ public class Column implements Serializable{
 	
 	private String link;
 	
+	private String options;
+	
 	public Column() {
 		
 	}
 	
-	public Column(long productId, long columnId, String name, int type, String poster, String link) {
+	public Column(long productId, long columnId, String name, int type, String poster, String link, String options) {
 		this.productId = productId;
 		this.columnId = columnId;
 		this.name = name;
 		this.type = type;
 		this.poster = poster;
 		this.link = link;
+		this.options = options;
 	}
 	
-	public Column(long productId, String name, int type, String poster, String link) {
+	public Column(long productId, String name, int type, String poster, String link, String options) {
 		this.productId = productId;
 		this.name = name;
 		this.type = type;
 		this.poster = poster;
 		this.link = link;
+		this.options = options;
 	}
 
 	public String getName() {
@@ -91,6 +95,14 @@ public class Column implements Serializable{
 
 	public void setColumnId(long columnId) {
 		this.columnId = columnId;
+	}
+
+	public String getOptions() {
+		return options;
+	}
+
+	public void setOptions(String options) {
+		this.options = options;
 	}
 	
 }

@@ -21,16 +21,16 @@ public interface ContentMapper {
 
 	@Insert("<script>"
 			+ "<if test='contentId == 0'>"
-			+ "INSERT INTO content(productId, poster, icon, screenShot, type, link, tip) VALUES(#{productId}, #{poster}, #{icon}, #{screenShot}, #{type}, #{link}, #{tip})"
+			+ "INSERT INTO content(productId, name, poster, icon, screenShot, type, link, tip, options) VALUES(#{productId}, #{name}, #{poster}, #{icon}, #{screenShot}, #{type}, #{link}, #{tip}, #{options})"
 			+ "</if>"
 			+ "<if test='contentId != 0'>"
-			+ "INSERT INTO content(productId, contentId, poster, icon, screenShot, type, link, tip) VALUES(#{productId}, #{contentId}, #{poster}, #{icon}, #{screenShot}, #{type}, #{link}, #{tip})"
+			+ "INSERT INTO content(productId, contentId, name, poster, icon, screenShot, type, link, tip, options) VALUES(#{productId}, #{contentId}, #{name}, #{poster}, #{icon}, #{screenShot}, #{type}, #{link}, #{tip}, #{options})"
 			+ "</if>"
 			+ "</script>")
 	@Options(useGeneratedKeys = true, keyProperty="contentId", keyColumn="contentId")
 	void insert(Content content);
 
-	@Update("UPDATE content SET poster=#{poster}, icon=#{icon}, screenShot=#{screenShot}, type=#{type}, link=#{link}, tip=#{tip} "
+	@Update("UPDATE content SET poster=#{poster}, icon=#{icon}, screenShot=#{screenShot}, type=#{type}, link=#{link}, tip=#{tip}, name=#{name}, options=#{options}"
 			+ "WHERE productId = #{productId} AND contentId = #{contentId}")
 	void update(Content content);
 

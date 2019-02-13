@@ -6,17 +6,26 @@
 	<resultMap id="ColumnContentMap" type="ColumnContent" >
 		<id property="productId" column="productId" />
 		<id property="columnId" column="columnId" />
+		<id property="type" column="type" />
 		<id property="contentId" column="contentId" />
 		<result property="position" column="position" />
 		<association property="content" javaType="Content" >
 			<id property="productId" column="productId" />
 			<id property="contentId" column="contentId" />
-			<result property="poster" column="poster" />
-			<result property="icon" column="icon" />
-			<result property="screenShot" column="screenShot" />
-			<result property="type" column="type" />
-			<result property="link" column="link" />
-			<result property="tip" column="tip" />
+			<result property="poster" column="con_poster" />
+			<result property="icon" column="con_icon" />
+			<result property="screenShot" column="con_screenShot" />
+			<result property="type" column="con_type" />
+			<result property="link" column="con_link" />
+			<result property="tip" column="con_tip" />
+		</association>
+		<association property="childColumn" javaType="Column" >
+			<id property="productId" column="productId" />
+			<id property="columnId" column="contentId" />
+			<result property="name" column="col_name" />
+			<result property="type" column="col_type" />
+			<result property="poster" column="col_poster" />
+			<result property="link" column="col_link" />
 		</association>
 	</resultMap>
 
@@ -26,27 +35,51 @@
 		ORDER BY position
 	</select>
 
-	<select id="getByProductByContent" resultType="ColumnContent">
+	<select id="getByProductByContentByType0" resultType="ColumnContent">
 		SELECT * FROM column_content
-		WHERE productId = #{productId} AND contentId = #{contentId}
+		WHERE productId = #{productId} AND contentId = #{contentId} AND type = 0
+		ORDER BY position
+	</select>
+
+	<select id="getByProductByContentByType1" resultType="ColumnContent">
+		SELECT * FROM column_content
+		WHERE productId = #{productId} AND contentId = #{contentId} AND type = 1
 		ORDER BY position
 	</select>
 	
-	<select id="getDetailsByProductByColumn" resultMap="ColumnContentMap">
+	<select id="getDetailContentsByProductByColumn" resultMap="ColumnContentMap">
 		SELECT
 		cc.productId AS productId,
-		columnId,
+		cc.columnId as columnId,
+		cc.type as type,
 		cc.contentId As contentId,
-		position,
-		poster,
-		icon,
-		screenShot,
-		type,
-		link,
-		tip
+		cc.position as position,
+		c.poster as con_poster,
+		c.icon as con_icon,
+		c.screenShot as con_screenShot,
+		c.type as con_type,
+		c.link as con_link,
+		c.tip as con_tip
 		FROM column_content cc JOIN content c 
 		ON cc.productId = c.productId AND cc.contentId = c.contentId
-		WHERE cc.productId = #{productId} AND cc.columnId = #{columnId}
+		WHERE cc.productId = #{productId} AND cc.columnId = #{columnId} AND cc.type = 0
+		ORDER BY position
+	</select>
+	
+	<select id="getDetailColumnsByProductByColumn" resultMap="ColumnContentMap">
+		SELECT
+		cc.productId AS productId,
+		cc.columnId as columnId,
+		cc.type as type,
+		cc.contentId As contentId,
+		cc.position as position,
+		c.name as col_name,
+		c.type as col_type,
+		c.poster as col_poster,
+		c.link as col_link
+		FROM column_content cc JOIN column_ c 
+		ON cc.productId = c.productId AND cc.contentId = c.columnId
+		WHERE cc.productId = #{productId} AND cc.columnId = #{columnId} AND cc.type = 1
 		ORDER BY position
 	</select>
 </mapper>

@@ -27,16 +27,9 @@ public class ColumnControllerTest extends AControllerTest {
 
 	@Test
 	public void testFunction() throws URISyntaxException {
-		String productName = "test";
-		Product product = new Product(productId, productName);
-		String columnName = "test";
-		int columnType = 0;
-		String columnPoster = "demo.pic";
-		String columnLink = "demo.html";
 		String changedColumnName = "test-changed";
-		Column column = new Column(productId, columnId, columnName, columnType, columnPoster, columnLink);
-		String columnUrl = String.format("http://localhost:%d%s", port, columnUri);
-		String columnUrlWithId = String.format("http://localhost:%d%s", port, columnUriWithId);
+		String columnUrl = String.format("http://localhost:%d%s%s", port, contextPath, columnUri);
+		String columnUrlWithId = String.format("http://localhost:%d%s%s", port, contextPath, columnUriWithId);
 
 		{
 			// post a product
@@ -56,6 +49,7 @@ public class ColumnControllerTest extends AControllerTest {
 			assertEquals(columnType, theColumn.getType());
 			assertEquals(columnPoster, theColumn.getPoster());
 			assertEquals(columnLink, theColumn.getLink());
+			assertEquals(columnOptions, theColumn.getOptions());
 		}
 		{
 			// get columns
@@ -71,6 +65,7 @@ public class ColumnControllerTest extends AControllerTest {
 			assertEquals(columnType, theColumn.getType());
 			assertEquals(columnPoster, theColumn.getPoster());
 			assertEquals(columnLink, theColumn.getLink());
+			assertEquals(columnOptions, theColumn.getOptions());
 		}
 		{
 			// put the column
@@ -86,6 +81,8 @@ public class ColumnControllerTest extends AControllerTest {
 			assertEquals(columnType, theColumn.getType());
 			assertEquals(columnPoster, theColumn.getPoster());
 			assertEquals(columnLink, theColumn.getLink());
+			assertEquals(columnOptions, theColumn.getOptions());
+			column.setName(columnName);
 		}
 		{
 			// get the column
@@ -96,6 +93,7 @@ public class ColumnControllerTest extends AControllerTest {
 			assertEquals(columnType, theColumn.getType());
 			assertEquals(columnPoster, theColumn.getPoster());
 			assertEquals(columnLink, theColumn.getLink());
+			assertEquals(columnOptions, theColumn.getOptions());
 		}
 		{
 			// delete the column
@@ -125,14 +123,7 @@ public class ColumnControllerTest extends AControllerTest {
 
 	@Test
 	public void testMultiKey() throws URISyntaxException {
-		String productName = "test";
-		Product product = new Product(productId, productName);
-		String columnName = "test";
-		int columnType = 0;
-		String columnPoster = "demo.pic";
-		String columnLink = "demo.html";
-		Column column = new Column(productId, columnId, columnName, columnType, columnPoster, columnLink);
-		String url = String.format("http://localhost:%d%s", port, columnUri);
+		String url = String.format("http://localhost:%d%s%s", port, contextPath, columnUri);
 		{
 			// post a product
 			restTemplate.postForObject(productUri, product, Product.class);
@@ -157,14 +148,7 @@ public class ColumnControllerTest extends AControllerTest {
 
 	@Test
 	public void testNotFound() throws URISyntaxException {
-		String columnName = "test";
-		int columnType = 0;
-		String columnPoster = "demo.pic";
-		String columnLink = "demo.html";
-		Product product = new Product(productId, "test");
-		Column column = new Column(productId, columnId, columnName, columnType, columnPoster, columnLink);
-
-		String urlWithId = String.format("http://localhost:%d%s", port, columnUriWithId);
+		String urlWithId = String.format("http://localhost:%d%s%s", port, contextPath, columnUriWithId);
 		{
 			restTemplate.postForObject(productUri, product, Product.class);
 		}
@@ -205,12 +189,7 @@ public class ColumnControllerTest extends AControllerTest {
 
 	@Test
 	public void testPostWithoutProduct() throws URISyntaxException {
-		String columnName = "test";
-		int columnType = 0;
-		String columnPoster = "demo.pic";
-		String columnLink = "demo.html";
-		Column column = new Column(productId, columnId, columnName, columnType, columnPoster, columnLink);
-		String url = String.format("http://localhost:%d%s", port, columnUri);
+		String url = String.format("http://localhost:%d%s%s", port, contextPath, columnUri);
 		RequestEntity<Column> request = RequestEntity.post(new URI(url)).accept(MediaType.APPLICATION_JSON)
 				.body(column);
 		ResponseEntity<HashMap<String, Object>> result = restTemplate.exchange(request, responseType);
@@ -222,14 +201,7 @@ public class ColumnControllerTest extends AControllerTest {
 
 	@Test
 	public void testDeleteProduct() throws URISyntaxException {
-		String productName = "test";
-		Product product = new Product(productId, productName);
-		String columnName = "test";
-		int columnType = 0;
-		String columnPoster = "demo.pic";
-		String columnLink = "demo.html";
-		Column column = new Column(productId, columnId, columnName, columnType, columnPoster, columnLink);
-		String url = String.format("http://localhost:%d%s", port, columnUriWithId);
+		String url = String.format("http://localhost:%d%s%s", port, contextPath, columnUriWithId);
 		{
 			// post a product
 			restTemplate.postForObject(productUri, product, Product.class);
@@ -255,13 +227,7 @@ public class ColumnControllerTest extends AControllerTest {
 
 	@Test
 	public void testAutoIncrement() {
-		String productName = "test";
-		Product product = new Product(productId, productName);
-		String columnName = "test";
-		int columnType = 0;
-		String columnPoster = "demo.pic";
-		String columnLink = "demo.html";
-		Column column = new Column(productId, columnName, columnType, columnPoster, columnLink);
+		Column column = new Column(productId, columnName, columnType, columnPoster, columnLink, columnOptions);
 
 		// post a product
 		restTemplate.postForObject(productUri, product, Product.class);

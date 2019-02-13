@@ -21,16 +21,16 @@ public interface ColumnMapper {
 
 	@Insert("<script>"
 			+ "<if test='columnId == 0'>"
-			+ "INSERT INTO column_(productId, name, type, poster, link) VALUES(#{productId}, #{name}, #{type}, #{poster}, #{link})"
+			+ "INSERT INTO column_(productId, name, type, poster, link, options) VALUES(#{productId}, #{name}, #{type}, #{poster}, #{link}, #{options})"
 			+ "</if>"
 			+ "<if test='columnId != 0'>"
-			+ "INSERT INTO column_(productId, columnId, name, type, poster, link) VALUES(#{productId}, #{columnId}, #{name}, #{type}, #{poster}, #{link})"
+			+ "INSERT INTO column_(productId, columnId, name, type, poster, link, options) VALUES(#{productId}, #{columnId}, #{name}, #{type}, #{poster}, #{link}, #{options})"
 			+ "</if>"
 			+ "</script>")
 	@Options(useGeneratedKeys = true, keyProperty="columnId", keyColumn="columnId")
 	void insert(Column column);
 
-	@Update("UPDATE column_ SET name=#{name}, type=#{type}, poster=#{poster}, link=#{link} WHERE productId=#{productId} AND columnId = #{columnId}")
+	@Update("UPDATE column_ SET name=#{name}, type=#{type}, poster=#{poster}, link=#{link}, options=#{options} WHERE productId=#{productId} AND columnId = #{columnId}")
 	void update(Column column);
 
 	@Delete("DELETE FROM column_ WHERE productId = #{productId} AND columnId = #{columnId}")

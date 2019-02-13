@@ -13,6 +13,8 @@ public class Content implements Serializable {
 	
 	private long contentId;
 	
+	private String name;
+	
 	private String poster;
 	
 	private String icon;
@@ -25,22 +27,26 @@ public class Content implements Serializable {
 	
 	private String tip;
 	
+	private String options;
+	
 	public Content() {
 		
 	}
 	
-	public Content(long productId, long contentId, String poster, String icon, String screenShot, int type, String link, String tip) {
+	public Content(long productId, long contentId, String name, String poster, String icon, String screenShot, int type, String link, String tip, String options) {
 		this.productId = productId;
 		this.contentId = contentId;
+		this.name = name;
 		this.poster = poster;
 		this.icon = icon;
 		this.screenShot = screenShot;
 		this.type = type;
 		this.link = link;
 		this.tip = tip;
+		this.options = options;
 	}
 	
-	public Content(long productId, String poster, String icon, String screenShot, int type, String link, String tip) {
+	public Content(long productId, String name, String poster, String icon, String screenShot, int type, String link, String tip, String options) {
 		this.productId = productId;
 		this.poster = poster;
 		this.icon = icon;
@@ -112,6 +118,22 @@ public class Content implements Serializable {
 
 	public void setContentId(long contentId) {
 		this.contentId = contentId;
+	}
+
+	public String getOptions() {
+		return options;
+	}
+
+	public void setOptions(String options) {
+		this.options = options;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 	

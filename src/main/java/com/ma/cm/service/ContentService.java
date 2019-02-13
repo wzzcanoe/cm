@@ -46,7 +46,7 @@ public class ContentService extends AService {
 	public void delete(long productId, long contentId) {
 		checkContentExist(productId, contentId);
 		// if content is be related by column, it should forbidden to delete
-		List<ColumnContent> columnContents = columnContentMapper.getByProductByContent(productId, contentId);
+		List<ColumnContent> columnContents = columnContentMapper.getByProductByContentByType0(productId, contentId);
 		if (!columnContents.isEmpty()) {
 			String message = String.format("should not delete the content %d:%d because it is used by column %d:%d", productId, contentId, productId, columnContents.get(0).getColumnId());
 			throw new ForbiddenException(message);

@@ -27,18 +27,9 @@ public class ContentControllerTest extends AControllerTest{
 
 	@Test
 	public void testFunction() throws URISyntaxException {
-		String productName = "test";
-		Product product = new Product(productId, productName);
-		int contentType = 0;
-		String contentPoster = "demo.pic";
-		String contentPosterChanged = "demo-changed.pic";
-		String contentLink = "demo.html";
-		String contentIcon = "demo.icon";
-		String contentScreenShot ="demo.screenShot";
-		String contentTip = "demo.tip";
-		Content content = new Content(productId, contentId, contentPoster, contentIcon, contentScreenShot, contentType, contentLink, contentTip);
-		String contentUrl= String.format("http://localhost:%d%s", port, contentUri);
-		String contentUrlWithId = String.format("http://localhost:%d%s", port, contentUriWithId);
+		String contentPosterChanged = "changed.poster";
+		String contentUrl= String.format("http://localhost:%d%s%s", port, contextPath, contentUri);
+		String contentUrlWithId = String.format("http://localhost:%d%s%s", port, contextPath, contentUriWithId);
 
 		{
 			// post a product
@@ -60,6 +51,8 @@ public class ContentControllerTest extends AControllerTest{
 			assertEquals(contentScreenShot, result.getScreenShot());
 			assertEquals(contentLink, result.getLink());
 			assertEquals(contentTip, result.getTip());
+			assertEquals(contentName, result.getName());
+			assertEquals(contentOptions, result.getOptions());
 		}
 		{
 			// get contents
@@ -77,6 +70,8 @@ public class ContentControllerTest extends AControllerTest{
 			assertEquals(contentScreenShot, result.getScreenShot());
 			assertEquals(contentLink, result.getLink());
 			assertEquals(contentTip, result.getTip());
+			assertEquals(contentName, result.getName());
+			assertEquals(contentOptions, result.getOptions());
 		}
 		{
 			// put the content
@@ -94,6 +89,9 @@ public class ContentControllerTest extends AControllerTest{
 			assertEquals(contentScreenShot, result.getScreenShot());
 			assertEquals(contentLink, result.getLink());
 			assertEquals(contentTip, result.getTip());
+			assertEquals(contentName, result.getName());
+			assertEquals(contentOptions, result.getOptions());
+			content.setPoster(contentPoster);
 		}
 		{
 			// get the content
@@ -106,6 +104,8 @@ public class ContentControllerTest extends AControllerTest{
 			assertEquals(contentScreenShot, result.getScreenShot());
 			assertEquals(contentLink, result.getLink());
 			assertEquals(contentTip, result.getTip());
+			assertEquals(contentName, result.getName());
+			assertEquals(contentOptions, result.getOptions());
 		}
 		{
 			// delete the content
@@ -135,16 +135,7 @@ public class ContentControllerTest extends AControllerTest{
 
 	@Test
 	public void testMultiKey() throws URISyntaxException {
-		String productName = "test";
-		Product product = new Product(productId, productName);
-		int contentType = 0;
-		String contentPoster = "demo.pic";
-		String contentLink = "demo.html";
-		String contentIcon = "demo.icon";
-		String contentScreenShot ="demo.screenShot";
-		String contentTip = "demo.tip";
-		Content content = new Content(productId, contentId, contentPoster, contentIcon, contentScreenShot, contentType, contentLink, contentTip);
-		String url = String.format("http://localhost:%d%s", port, contentUri);
+		String url = String.format("http://localhost:%d%s%s", port, contextPath, contentUri);
 		{
 			// post a product
 			restTemplate.postForObject(productUri, product, Product.class);
@@ -169,17 +160,7 @@ public class ContentControllerTest extends AControllerTest{
 	
 	@Test
 	public void testNotFound() throws URISyntaxException {
-		String productName = "test";
-		Product product = new Product(productId, productName);
-		int contentType = 0;
-		String contentPoster = "demo.pic";
-		String contentLink = "demo.html";
-		String contentIcon = "demo.icon";
-		String contentScreenShot ="demo.screenShot";
-		String contentTip = "demo.tip";
-		Content content = new Content(productId, contentId, contentPoster, contentIcon, contentScreenShot, contentType, contentLink, contentTip);
-		
-		String urlWithId = String.format("http://localhost:%d%s", port, contentUriWithId);
+		String urlWithId = String.format("http://localhost:%d%s%s", port, contextPath, contentUriWithId);
 		{
 			restTemplate.postForObject(productUri, product, Product.class);
 		}
@@ -220,14 +201,7 @@ public class ContentControllerTest extends AControllerTest{
 
 	@Test
 	public void testPostWithoutProduct() throws URISyntaxException {
-		int contentType = 0;
-		String contentPoster = "demo.pic";
-		String contentLink = "demo.html";
-		String contentIcon = "demo.icon";
-		String contentScreenShot ="demo.screenShot";
-		String contentTip = "demo.tip";
-		Content content = new Content(productId, contentId, contentPoster, contentIcon, contentScreenShot, contentType, contentLink, contentTip);
-		String url = String.format("http://localhost:%d%s", port, contentUri);
+		String url = String.format("http://localhost:%d%s%s", port, contextPath, contentUri);
 		RequestEntity<Content> request = RequestEntity.post(new URI(url)).accept(MediaType.APPLICATION_JSON)
 				.body(content);
 		ResponseEntity<HashMap<String, Object>> result = restTemplate.exchange(request, responseType);
@@ -239,16 +213,7 @@ public class ContentControllerTest extends AControllerTest{
 
 	@Test
 	public void testDeleteProduct() throws URISyntaxException {
-		String productName = "test";
-		Product product = new Product(productId, productName);
-		int contentType = 0;
-		String contentPoster = "demo.pic";
-		String contentLink = "demo.html";
-		String contentIcon = "demo.icon";
-		String contentScreenShot ="demo.screenShot";
-		String contentTip = "demo.tip";
-		Content content = new Content(productId, contentId, contentPoster, contentIcon, contentScreenShot, contentType, contentLink, contentTip);
-		String url = String.format("http://localhost:%d%s", port, contentUriWithId);
+		String url = String.format("http://localhost:%d%s%s", port, contextPath, contentUriWithId);
 		{
 			// post a product
 			restTemplate.postForObject(productUri, product, Product.class);
@@ -273,17 +238,8 @@ public class ContentControllerTest extends AControllerTest{
 	}
 
 	@Test
-	public void testAutoIncrement() {
-		String productName = "test";
-		Product product = new Product(productId, productName);
-		int contentType = 0;
-		String contentPoster = "demo.pic";
-		String contentLink = "demo.html";
-		String contentIcon = "demo.icon";
-		String contentScreenShot ="demo.screenShot";
-		String contentTip = "demo.tip";
-		Content content = new Content(productId, contentPoster, contentIcon, contentScreenShot, contentType, contentLink, contentTip);
-		
+	public void testAutoIncrement() {	
+		Content content = new Content(productId, columnName, contentPoster, contentIcon, contentScreenShot, contentType, contentLink, contentTip, columnOptions);
 		// post a product
 		restTemplate.postForObject(productUri, product, Product.class);
 
