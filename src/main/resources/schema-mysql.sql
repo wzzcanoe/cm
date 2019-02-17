@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
 --
--- Host: 127.0.0.1    Database: test
+-- Host: 127.0.0.1    Database: cm
 -- ------------------------------------------------------
 -- Server version	8.0.14
 
@@ -29,8 +29,9 @@ CREATE TABLE `column_` (
   `type` int(6) DEFAULT NULL,
   `poster` varchar(255) DEFAULT NULL,
   `link` varchar(255) DEFAULT NULL,
+  `options` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`columnId`,`productId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1000005 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1000099 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -43,9 +44,10 @@ DROP TABLE IF EXISTS `column_content`;
 CREATE TABLE `column_content` (
   `productId` int(11) NOT NULL,
   `columnId` int(11) NOT NULL,
+  `type` int(6) NOT NULL,
   `contentId` int(11) NOT NULL,
   `position` int(11) DEFAULT NULL,
-  PRIMARY KEY (`productId`,`columnId`,`contentId`)
+  PRIMARY KEY (`productId`,`columnId`,`type`,`contentId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -65,8 +67,27 @@ CREATE TABLE `content` (
   `type` int(6) DEFAULT NULL,
   `link` varchar(255) DEFAULT NULL,
   `tip` varchar(255) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `options` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`contentId`,`productId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1000004 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1000073 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `ftp`
+--
+
+DROP TABLE IF EXISTS `ftp`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ftp` (
+  `id` int(11) NOT NULL,
+  `host` varchar(255) DEFAULT NULL,
+  `port` int(11) DEFAULT NULL,
+  `username` varchar(45) DEFAULT NULL,
+  `password` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -79,8 +100,9 @@ DROP TABLE IF EXISTS `product`;
 CREATE TABLE `product` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) DEFAULT NULL,
+  `options` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1000009 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1000073 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -106,4 +128,4 @@ CREATE TABLE `user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-02-10 23:27:06
+-- Dump completed on 2019-02-17 22:25:16

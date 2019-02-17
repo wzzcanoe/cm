@@ -47,7 +47,8 @@ public class ColumnService extends AService {
 		checkColumnExist(productId, columnId);
 		List<ColumnContent> columnContents = columnContentMapper.getByProductByContentByType1(productId, columnId);
 		if (!columnContents.isEmpty()) {
-			String message = String.format("should not delete the column %d:%d because it is used by column %d:%d", productId, columnId, productId, columnContents.get(0).getColumnId());
+			String message = String.format("should not delete the column %d:%d because it is used by column %d:%d",
+					productId, columnId, productId, columnContents.get(0).getColumnId());
 			throw new ForbiddenException(message);
 		}
 		columnContentMapper.deleteByProductByColumn(productId, columnId);

@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
 --
--- Host: 127.0.0.1    Database: test
+-- Host: 127.0.0.1    Database: cm
 -- ------------------------------------------------------
 -- Server version	8.0.14
 
@@ -21,7 +21,7 @@
 
 LOCK TABLES `column_` WRITE;
 /*!40000 ALTER TABLE `column_` DISABLE KEYS */;
-INSERT INTO `column_` VALUES (1,1,'test',0,NULL,NULL),(2,1,'111',0,NULL,NULL),(22,1,'test',0,NULL,NULL),(23,1,'test',0,NULL,NULL),(24,1,'test',0,NULL,NULL),(25,1,'test',0,NULL,NULL);
+INSERT INTO `column_` VALUES (1,1,'name8',0,'/product-1/column/c33b40ae-9e5f-4594-8d3e-1d6db48e6770.png','link8','options8'),(2,1,'111',0,NULL,NULL,NULL),(3,1,'26',0,'/product-1/column-3/posterFile.gif',NULL,NULL),(4,1,NULL,0,'/product-1/column-4/posterFile.gif',NULL,NULL),(5,1,NULL,0,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `column_` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -31,7 +31,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `column_content` WRITE;
 /*!40000 ALTER TABLE `column_content` DISABLE KEYS */;
-INSERT INTO `column_content` VALUES (1,1,2,455),(1,1,3,444),(1,2,1,NULL);
+INSERT INTO `column_content` VALUES (1,1,0,1,8),(1,1,1,2,4);
 /*!40000 ALTER TABLE `column_content` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -41,8 +41,18 @@ UNLOCK TABLES;
 
 LOCK TABLES `content` WRITE;
 /*!40000 ALTER TABLE `content` DISABLE KEYS */;
-INSERT INTO `content` VALUES (1,1,NULL,NULL,NULL,NULL,NULL,NULL),(2,1,NULL,NULL,NULL,NULL,NULL,NULL),(3,1,NULL,NULL,NULL,NULL,NULL,NULL),(4,1,NULL,NULL,NULL,NULL,NULL,NULL),(5,1,NULL,NULL,NULL,0,NULL,NULL),(6,1,NULL,NULL,NULL,0,NULL,NULL),(7,1,NULL,NULL,NULL,0,NULL,NULL);
+INSERT INTO `content` VALUES (1,1,NULL,NULL,NULL,0,NULL,NULL,'test','b'),(2,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(3,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(4,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(5,1,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `content` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `ftp`
+--
+
+LOCK TABLES `ftp` WRITE;
+/*!40000 ALTER TABLE `ftp` DISABLE KEYS */;
+INSERT INTO `ftp` VALUES (1,'localhost',21,'cm','111111');
+/*!40000 ALTER TABLE `ftp` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -51,7 +61,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `product` WRITE;
 /*!40000 ALTER TABLE `product` DISABLE KEYS */;
-INSERT INTO `product` VALUES (1,'zjy333'),(2,'zjy'),(3,'zjy333'),(4,'test'),(1000000,'test'),(1000001,'test'),(1000002,'test');
+INSERT INTO `product` VALUES (1,'zjy333','xx'),(2,'zjy',NULL),(3,'zjy333',NULL),(4,'test',NULL),(5,'test',NULL);
 /*!40000 ALTER TABLE `product` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -74,4 +84,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-02-10 23:27:25
+-- Dump completed on 2019-02-17 22:25:29

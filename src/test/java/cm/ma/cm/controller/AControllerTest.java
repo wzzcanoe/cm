@@ -8,6 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.embedded.LocalServerPort;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import com.ma.cm.entity.Column;
 import com.ma.cm.entity.ColumnContent;
@@ -113,7 +121,8 @@ public abstract class AControllerTest {
 	protected int columnContentType2 = ColumnContent.TYPE_CHILD_COLUMN;
 	protected long columnContentPosition2 = 8;
 	protected ColumnContent columnContent2 = new ColumnContent(productId, columnId, columnContentType2, childColumnId, columnContentPosition2);
-	
+		
+	protected String posterFilepath = "src/main/webapp/poster/checked.gif";
 	
 	protected ParameterizedTypeReference<HashMap<String, Object>> responseType = new ParameterizedTypeReference<HashMap<String, Object>>() {
 	};
@@ -131,4 +140,101 @@ public abstract class AControllerTest {
 		restTemplate.delete(productUriWithId);
 	}
 
+
+	private HttpEntity<MultiValueMap<String, Object>> createRequestForColumn(Column column, String filepath) {
+		HttpHeaders headers = new HttpHeaders();
+		MediaType type = MediaType.parseMediaType("multipart/form-data");
+	    headers.setContentType(type);
+	    MultiValueMap<String, Object> form = new LinkedMultiValueMap<String, Object>();
+	    
+	    form.add("productId", column.getProductId());
+	    form.add("columnId", column.getColumnId());
+	    form.add("name", column.getName());
+	    form.add("poster", column.getPoster());
+	    form.add("type", column.getType());
+	    form.add("link", column.getLink());
+	    form.add("options", column.getOptions());
+	    if (filepath != null) {
+			FileSystemResource fileSystemResource = new FileSystemResource(filepath);
+			form.add("posterFile", fileSystemResource);
+		}
+		HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<>(form, headers);
+		return request;
+	}
+	
+	protected Column postColumnForColumn(Column column, String filepath) {
+		HttpEntity<MultiValueMap<String, Object>> request = createRequestForColumn(column, filepath);
+		Column result = restTemplate.postForObject(columnUri, request, Column.class);
+		return result;
+	}
+	
+	protected ResponseEntity<HashMap<String, Object>> postColumnForEntity(Column column, String filepath) {
+		HttpEntity<MultiValueMap<String, Object>> request = createRequestForColumn(column, filepath);
+		ResponseEntity<HashMap<String, Object>> result = restTemplate.exchange(columnUri, HttpMethod.POST, request, responseType);
+		return result;
+	}
+
+	protected Column putColumnForColumn(Column column, String filepath) {
+		HttpEntity<MultiValueMap<String, Object>> request = createRequestForColumn(column, filepath);
+		ResponseEntity<Column> putResult = restTemplate.exchange(columnUriWithId, HttpMethod.PUT, request, Column.class);
+	    Column result = putResult.getBody();
+	    return result;
+	}
+
+	protected ResponseEntity<HashMap<String, Object>> putColumnForEntity(Column column, String filepath) {
+		HttpEntity<MultiValueMap<String, Object>> request = createRequestForColumn(column, filepath);
+		ResponseEntity<HashMap<String, Object>> putResult = restTemplate.exchange(columnUriWithId, HttpMethod.PUT, request, responseType);
+	    return putResult;
+	}
+
+	private HttpEntity<MultiValueMap<String, Object>> createRequestForContent(Content content, String filepath) {
+		HttpHeaders headers = new HttpHeaders();
+		MediaType type = MediaType.parseMediaType("multipart/form-data");
+	    headers.setContentType(type);
+	    MultiValueMap<String, Object> form = new LinkedMultiValueMap<String, Object>();
+	    
+	    form.add("productId", content.getProductId());
+	    form.add("contentId", content.getContentId());
+	    form.add("name", content.getName());
+	    form.add("poster", content.getPoster());
+	    form.add("icon", content.getIcon());
+	    form.add("screenShot", content.getScreenShot());
+	    form.add("type", content.getType());
+	    form.add("link", content.getLink());
+	    form.add("tip", content.getTip());
+	    form.add("options", content.getOptions());
+	    if (filepath != null) {
+			FileSystemResource fileSystemResource = new FileSystemResource(filepath);
+			form.add("posterFile", fileSystemResource);
+			form.add("iconFile", fileSystemResource);
+			form.add("screenShotFile", fileSystemResource);
+		}
+		HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<>(form, headers);
+		return request;
+	}
+	
+	protected Content postContentForContent(Content content, String filepath) {
+		HttpEntity<MultiValueMap<String, Object>> request = createRequestForContent(content, filepath);
+		Content result = restTemplate.postForObject(contentUri, request, Content.class);
+		return result;
+	}
+	
+	protected ResponseEntity<HashMap<String, Object>> postContentForEntity(Content content, String filepath) {
+		HttpEntity<MultiValueMap<String, Object>> request = createRequestForContent(content, filepath);
+		ResponseEntity<HashMap<String, Object>> result = restTemplate.exchange(contentUri, HttpMethod.POST, request, responseType);
+		return result;
+	}
+
+	protected Content putContentForContent(Content content, String filepath) {
+		HttpEntity<MultiValueMap<String, Object>> request = createRequestForContent(content, filepath);
+		ResponseEntity<Content> putResult = restTemplate.exchange(contentUriWithId, HttpMethod.PUT, request, Content.class);
+		Content result = putResult.getBody();
+	    return result;
+	}
+
+	protected ResponseEntity<HashMap<String, Object>> putContentForEntity(Content content, String filepath) {
+		HttpEntity<MultiValueMap<String, Object>> request = createRequestForContent(content, filepath);
+		ResponseEntity<HashMap<String, Object>> putResult = restTemplate.exchange(contentUriWithId, HttpMethod.PUT, request, responseType);
+	    return putResult;
+	}
 }

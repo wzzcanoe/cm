@@ -3,6 +3,7 @@ package cm.ma.cm.controller;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -27,9 +28,8 @@ public class ContentControllerTest extends AControllerTest{
 
 	@Test
 	public void testFunction() throws URISyntaxException {
-		String contentPosterChanged = "changed.poster";
+		String contentNameChanged = "changed.name";
 		String contentUrl= String.format("http://localhost:%d%s%s", port, contextPath, contentUri);
-		String contentUrlWithId = String.format("http://localhost:%d%s%s", port, contextPath, contentUriWithId);
 
 		{
 			// post a product
@@ -42,13 +42,13 @@ public class ContentControllerTest extends AControllerTest{
 		}
 		{
 			// post a content
-			Content result = restTemplate.postForObject(contentUri, content, Content.class);
+			Content result = postContentForContent(content, null);
 			assertEquals(productId, result.getProductId());
 			assertEquals(contentId, result.getContentId());
 			assertEquals(contentType, result.getType());
-			assertEquals(contentPoster, result.getPoster());
-			assertEquals(contentIcon, result.getIcon());
-			assertEquals(contentScreenShot, result.getScreenShot());
+			assertNull(result.getPoster());
+			assertNull(result.getIcon());
+			assertNull(result.getScreenShot());
 			assertEquals(contentLink, result.getLink());
 			assertEquals(contentTip, result.getTip());
 			assertEquals(contentName, result.getName());
@@ -65,9 +65,9 @@ public class ContentControllerTest extends AControllerTest{
 			assertEquals(productId, result.getProductId());
 			assertEquals(contentId, result.getContentId());
 			assertEquals(contentType, result.getType());
-			assertEquals(contentPoster, result.getPoster());
-			assertEquals(contentIcon, result.getIcon());
-			assertEquals(contentScreenShot, result.getScreenShot());
+			assertNull(result.getPoster());
+			assertNull(result.getIcon());
+			assertNull(result.getScreenShot());
 			assertEquals(contentLink, result.getLink());
 			assertEquals(contentTip, result.getTip());
 			assertEquals(contentName, result.getName());
@@ -75,23 +75,19 @@ public class ContentControllerTest extends AControllerTest{
 		}
 		{
 			// put the content
-			content.setPoster(contentPosterChanged);
-			RequestEntity<Content> request = RequestEntity.put(new URI(contentUrlWithId))
-					.accept(MediaType.APPLICATION_JSON).body(content);
-			ResponseEntity<Content> putResult = restTemplate.exchange(request, Content.class);
-			Content result = putResult.getBody();
-			assertEquals(HttpStatus.OK, putResult.getStatusCode());
+			content.setName(contentNameChanged);
+			Content result = putContentForContent(content, null);
 			assertEquals(productId, result.getProductId());
 			assertEquals(contentId, result.getContentId());
 			assertEquals(contentType, result.getType());
-			assertEquals(contentPosterChanged, result.getPoster());
-			assertEquals(contentIcon, result.getIcon());
-			assertEquals(contentScreenShot, result.getScreenShot());
+			assertNull(result.getPoster());
+			assertNull(result.getIcon());
+			assertNull(result.getScreenShot());
 			assertEquals(contentLink, result.getLink());
 			assertEquals(contentTip, result.getTip());
-			assertEquals(contentName, result.getName());
+			assertEquals(contentNameChanged, result.getName());
 			assertEquals(contentOptions, result.getOptions());
-			content.setPoster(contentPoster);
+			content.setName(contentName);
 		}
 		{
 			// get the content
@@ -99,12 +95,12 @@ public class ContentControllerTest extends AControllerTest{
 			assertEquals(productId, result.getProductId());
 			assertEquals(contentId, result.getContentId());
 			assertEquals(contentType, result.getType());
-			assertEquals(contentPosterChanged, result.getPoster());
-			assertEquals(contentIcon, result.getIcon());
-			assertEquals(contentScreenShot, result.getScreenShot());
+			assertNull(result.getPoster());
+			assertNull(result.getIcon());
+			assertNull(result.getScreenShot());
 			assertEquals(contentLink, result.getLink());
 			assertEquals(contentTip, result.getTip());
-			assertEquals(contentName, result.getName());
+			assertEquals(contentNameChanged, result.getName());
 			assertEquals(contentOptions, result.getOptions());
 		}
 		{
@@ -135,22 +131,19 @@ public class ContentControllerTest extends AControllerTest{
 
 	@Test
 	public void testMultiKey() throws URISyntaxException {
-		String url = String.format("http://localhost:%d%s%s", port, contextPath, contentUri);
 		{
 			// post a product
 			restTemplate.postForObject(productUri, product, Product.class);
 		}
 		{
 			// post a content
-			Content result = restTemplate.postForObject(contentUri, content, Content.class);
+			Content result = postContentForContent(content, null);
 			assertEquals(productId, result.getProductId());
 			assertEquals(contentId, result.getContentId());
 		}
 		{
 			// post again
-			RequestEntity<Content> request = RequestEntity.post(new URI(url)).accept(MediaType.APPLICATION_JSON)
-					.body(content);
-			ResponseEntity<HashMap<String, Object>> result = restTemplate.exchange(request, responseType);
+			ResponseEntity<HashMap<String, Object>> result = postContentForEntity(content, null);
 			HashMap<String, Object> body = result.getBody();
 			assertEquals(HttpStatus.FORBIDDEN, result.getStatusCode());
 			assertNotNull(body.get("error"));
@@ -177,9 +170,7 @@ public class ContentControllerTest extends AControllerTest{
 		}
 		{
 			// put not found
-			RequestEntity<Content> request = RequestEntity.put(new URI(urlWithId)).accept(MediaType.APPLICATION_JSON)
-					.body(content);
-			ResponseEntity<HashMap<String, Object>> result = restTemplate.exchange(request, responseType);
+			ResponseEntity<HashMap<String, Object>> result = putContentForEntity(content, null);
 			HashMap<String, Object> body = result.getBody();
 			assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
 			assertNotNull(body.get("error"));
@@ -201,10 +192,7 @@ public class ContentControllerTest extends AControllerTest{
 
 	@Test
 	public void testPostWithoutProduct() throws URISyntaxException {
-		String url = String.format("http://localhost:%d%s%s", port, contextPath, contentUri);
-		RequestEntity<Content> request = RequestEntity.post(new URI(url)).accept(MediaType.APPLICATION_JSON)
-				.body(content);
-		ResponseEntity<HashMap<String, Object>> result = restTemplate.exchange(request, responseType);
+		ResponseEntity<HashMap<String, Object>> result = postContentForEntity(content, null);
 		HashMap<String, Object> body = result.getBody();
 		assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
 		assertNotNull(body.get("error"));
@@ -220,7 +208,7 @@ public class ContentControllerTest extends AControllerTest{
 		}
 		{
 			// post a content
-			restTemplate.postForObject(contentUri, content, Content.class);
+			postContentForContent(content, null);
 		}
 		{
 			// delete the product
@@ -248,13 +236,13 @@ public class ContentControllerTest extends AControllerTest{
 		int contentCountBefore = results.length;
 
 		// post a content
-		Content result = restTemplate.postForObject(contentUri, content, Content.class);
+		Content result = postContentForContent(content, null);
 		assertEquals(productId, result.getProductId());
 		assertNotEquals(0, result.getContentId());
 		assertEquals(contentType, result.getType());
-		assertEquals(contentPoster, result.getPoster());
-		assertEquals(contentIcon, result.getIcon());
-		assertEquals(contentScreenShot, result.getScreenShot());
+		assertNull(result.getPoster());
+		assertNull(result.getIcon());
+		assertNull(result.getScreenShot());
 		assertEquals(contentLink, result.getLink());
 		assertEquals(contentTip, result.getTip());
 		
@@ -268,5 +256,37 @@ public class ContentControllerTest extends AControllerTest{
 		// get contents from the product
 		results = restTemplate.getForObject(contentUri, Content[].class);
 		assertEquals(contentCountBefore, results.length);
+	}
+
+	@Test
+	public void testPoster() {
+
+		// post a product
+		restTemplate.postForObject(productUri, product, Product.class);
+
+		// post a content
+		Content result = postContentForContent(content, posterFilepath);
+		assertEquals(productId, result.getProductId());
+		assertEquals(contentId, result.getContentId());
+		assertNotNull(result.getPoster());
+		assertNotNull(result.getIcon());
+		assertNotNull(result.getScreenShot());
+
+		// get the content
+		result = restTemplate.getForObject(contentUriWithId, Content.class);
+		assertEquals(productId, result.getProductId());
+		assertEquals(contentId, result.getContentId());
+		assertNotNull(result.getPoster());
+		assertNotNull(result.getIcon());
+		assertNotNull(result.getScreenShot());
+
+		// put the column
+		result = putContentForContent(content, posterFilepath);
+		assertEquals(productId, result.getProductId());
+		assertEquals(contentId, result.getContentId());
+		assertNotNull(result.getPoster());
+		assertNotNull(result.getIcon());
+		assertNotNull(result.getScreenShot());
+
 	}
 }

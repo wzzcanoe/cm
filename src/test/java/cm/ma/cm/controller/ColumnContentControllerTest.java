@@ -18,9 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.ma.cm.Application;
-import com.ma.cm.entity.Column;
 import com.ma.cm.entity.ColumnContent;
-import com.ma.cm.entity.Content;
 import com.ma.cm.entity.Product;
 
 @RunWith(SpringRunner.class)
@@ -37,11 +35,11 @@ public class ColumnContentControllerTest extends AControllerTest{
 		}
 		{
 			// post a content
-			restTemplate.postForObject(contentUri, content, Content.class);
+			postContentForContent(content, null);
 		}
 		{
 			// post a column
-			restTemplate.postForObject(columnUri, column, Column.class);
+			postColumnForColumn(column, null);
 		}
 		{
 			// gets
@@ -130,11 +128,11 @@ public class ColumnContentControllerTest extends AControllerTest{
 		}
 		{
 			// post a child column
-			restTemplate.postForObject(columnUri, childColumn, Column.class);
+			postColumnForColumn(childColumn, null);
 		}
 		{
 			// post a column
-			restTemplate.postForObject(columnUri, column, Column.class);
+			postColumnForColumn(column, null);
 		}
 		{
 			// gets
@@ -222,11 +220,11 @@ public class ColumnContentControllerTest extends AControllerTest{
 		}
 		{
 			// post a content
-			restTemplate.postForObject(contentUri, content, Content.class);
+			postContentForContent(content, null);
 		}
 		{
 			// post a column
-			restTemplate.postForObject(columnUri, column, Column.class);
+			postColumnForColumn(column, null);
 		}
 		{
 			// post a relation between column and content
@@ -257,11 +255,11 @@ public class ColumnContentControllerTest extends AControllerTest{
 		}
 		{
 			// post a child column
-			restTemplate.postForObject(columnUri, childColumn, Column.class);
+			postColumnForColumn(childColumn, null);
 		}
 		{
 			// post a column
-			restTemplate.postForObject(columnUri, column, Column.class);
+			postColumnForColumn(column, null);
 		}
 		{
 			// post a relation between column and content
@@ -287,11 +285,11 @@ public class ColumnContentControllerTest extends AControllerTest{
 		}
 		{
 			// post a content
-			restTemplate.postForObject(contentUri, content, Content.class);
+			postContentForContent(content, null);
 		}
 		{
 			// post a column
-			restTemplate.postForObject(columnUri, column, Column.class);
+			postColumnForColumn(column, null);
 		}
 		{
 			// post a relation between column and content
@@ -313,8 +311,8 @@ public class ColumnContentControllerTest extends AControllerTest{
 		String urlWithId = String.format("http://localhost:%d%s%s", port, contextPath, columnContentUriWithIdType0);
 		{
 			restTemplate.postForObject(productUri, product, Product.class);
-			restTemplate.postForObject(columnUri, column, Column.class);
-			restTemplate.postForObject(contentUri, content, Content.class);
+			postContentForContent(content, null);
+			postColumnForColumn(column, null);
 		}
 		{
 			// get not found
@@ -356,8 +354,8 @@ public class ColumnContentControllerTest extends AControllerTest{
 		String url = String.format("http://localhost:%d%s%s", port, contextPath, columnContentUri);
 		{
 			restTemplate.postForObject(productUri, product, Product.class);
-			restTemplate.postForObject(columnUri, column, Column.class);
-			restTemplate.postForObject(contentUri, content, Content.class);
+			postContentForContent(content, null);
+			postColumnForColumn(column, null);
 		}
 		{
 			// post a relation between column and content
@@ -384,9 +382,9 @@ public class ColumnContentControllerTest extends AControllerTest{
 	public void testDetail() {
 		{
 			restTemplate.postForObject(productUri, product, Product.class);
-			restTemplate.postForObject(columnUri, column, Column.class);
-			restTemplate.postForObject(columnUri, childColumn, Column.class);
-			restTemplate.postForObject(contentUri, content, Content.class);
+			postContentForContent(content, posterFilepath);
+			postColumnForColumn(column, posterFilepath);
+			postColumnForColumn(childColumn, posterFilepath);
 			restTemplate.postForObject(columnContentUri, columnContent1, ColumnContent.class);
 			restTemplate.postForObject(columnContentUri, columnContent2, ColumnContent.class);
 		}
@@ -405,9 +403,9 @@ public class ColumnContentControllerTest extends AControllerTest{
 			assertEquals(productId, result.getContent().getProductId());
 			assertEquals(contentId, result.getContent().getContentId());
 			assertEquals(contentType, result.getContent().getType());
-			assertEquals(contentPoster, result.getContent().getPoster());
-			assertEquals(contentIcon, result.getContent().getIcon());
-			assertEquals(contentScreenShot, result.getContent().getScreenShot());
+			assertNotNull(result.getContent().getPoster());
+			assertNotNull(result.getContent().getIcon());
+			assertNotNull(result.getContent().getScreenShot());
 			assertEquals(contentLink, result.getContent().getLink());
 			assertEquals(contentTip, result.getContent().getTip());
 
@@ -423,7 +421,7 @@ public class ColumnContentControllerTest extends AControllerTest{
 			assertEquals(childColumnId, result.getChildColumn().getColumnId());
 			assertEquals(columnName, result.getChildColumn().getName());
 			assertEquals(columnType, result.getChildColumn().getType());
-			assertEquals(columnPoster, result.getChildColumn().getPoster());
+			assertNotNull(result.getChildColumn().getPoster());
 			assertEquals(columnLink, result.getChildColumn().getLink());
 		}
 	}

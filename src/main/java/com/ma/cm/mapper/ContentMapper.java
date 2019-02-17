@@ -30,8 +30,20 @@ public interface ContentMapper {
 	@Options(useGeneratedKeys = true, keyProperty="contentId", keyColumn="contentId")
 	void insert(Content content);
 
-	@Update("UPDATE content SET poster=#{poster}, icon=#{icon}, screenShot=#{screenShot}, type=#{type}, link=#{link}, tip=#{tip}, name=#{name}, options=#{options}"
-			+ "WHERE productId = #{productId} AND contentId = #{contentId}")
+	@Update("<script>"
+			+ "UPDATE content SET type=#{type}, "
+			+ "<if test='poster != null'>"
+			+ "poster=#{poster}, "
+			+ "</if>"
+			+ "<if test='icon != null'>"
+			+ "icon=#{icon}, "
+			+ "</if>"
+			+ "<if test='screenShot != null'>"
+			+ "screenShot=#{screenShot}, "
+			+ "</if>"
+			+ "link=#{link}, tip=#{tip}, name=#{name}, options=#{options}"
+			+ "WHERE productId = #{productId} AND contentId = #{contentId}"
+			+ "</script>")
 	void update(Content content);
 
 	@Delete("DELETE FROM content WHERE productId = #{productId} AND contentId = #{contentId}")

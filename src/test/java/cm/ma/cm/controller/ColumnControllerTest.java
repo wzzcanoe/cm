@@ -3,6 +3,7 @@ package cm.ma.cm.controller;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -29,8 +30,6 @@ public class ColumnControllerTest extends AControllerTest {
 	public void testFunction() throws URISyntaxException {
 		String changedColumnName = "test-changed";
 		String columnUrl = String.format("http://localhost:%d%s%s", port, contextPath, columnUri);
-		String columnUrlWithId = String.format("http://localhost:%d%s%s", port, contextPath, columnUriWithId);
-
 		{
 			// post a product
 			restTemplate.postForObject(productUri, product, Product.class);
@@ -42,12 +41,12 @@ public class ColumnControllerTest extends AControllerTest {
 		}
 		{
 			// post a column
-			Column theColumn = restTemplate.postForObject(columnUri, column, Column.class);
+			Column theColumn = postColumnForColumn(column, null);
 			assertEquals(productId, theColumn.getProductId());
 			assertEquals(columnId, theColumn.getColumnId());
 			assertEquals(columnName, theColumn.getName());
 			assertEquals(columnType, theColumn.getType());
-			assertEquals(columnPoster, theColumn.getPoster());
+			assertNull(theColumn.getPoster());
 			assertEquals(columnLink, theColumn.getLink());
 			assertEquals(columnOptions, theColumn.getOptions());
 		}
@@ -63,23 +62,19 @@ public class ColumnControllerTest extends AControllerTest {
 			assertEquals(columnId, theColumn.getColumnId());
 			assertEquals(columnName, theColumn.getName());
 			assertEquals(columnType, theColumn.getType());
-			assertEquals(columnPoster, theColumn.getPoster());
+			assertNull(theColumn.getPoster());
 			assertEquals(columnLink, theColumn.getLink());
 			assertEquals(columnOptions, theColumn.getOptions());
 		}
 		{
 			// put the column
 			column.setName(changedColumnName);
-			RequestEntity<Column> request = RequestEntity.put(new URI(columnUrlWithId))
-					.accept(MediaType.APPLICATION_JSON).body(column);
-			ResponseEntity<Column> putResult = restTemplate.exchange(request, Column.class);
-			Column theColumn = putResult.getBody();
-			assertEquals(HttpStatus.OK, putResult.getStatusCode());
+			Column theColumn = putColumnForColumn(column, null);
 			assertEquals(productId, theColumn.getProductId());
 			assertEquals(columnId, theColumn.getColumnId());
 			assertEquals(changedColumnName, theColumn.getName());
 			assertEquals(columnType, theColumn.getType());
-			assertEquals(columnPoster, theColumn.getPoster());
+			assertNull(theColumn.getPoster());
 			assertEquals(columnLink, theColumn.getLink());
 			assertEquals(columnOptions, theColumn.getOptions());
 			column.setName(columnName);
@@ -91,7 +86,7 @@ public class ColumnControllerTest extends AControllerTest {
 			assertEquals(columnId, theColumn.getColumnId());
 			assertEquals(changedColumnName, theColumn.getName());
 			assertEquals(columnType, theColumn.getType());
-			assertEquals(columnPoster, theColumn.getPoster());
+			assertNull(theColumn.getPoster());
 			assertEquals(columnLink, theColumn.getLink());
 			assertEquals(columnOptions, theColumn.getOptions());
 		}
@@ -123,22 +118,19 @@ public class ColumnControllerTest extends AControllerTest {
 
 	@Test
 	public void testMultiKey() throws URISyntaxException {
-		String url = String.format("http://localhost:%d%s%s", port, contextPath, columnUri);
 		{
 			// post a product
 			restTemplate.postForObject(productUri, product, Product.class);
 		}
 		{
 			// post a column
-			Column theColumn = restTemplate.postForObject(columnUri, column, Column.class);
+			Column theColumn = postColumnForColumn(column, null);
 			assertEquals(productId, theColumn.getProductId());
 			assertEquals(columnId, theColumn.getColumnId());
 		}
 		{
 			// post again
-			RequestEntity<Column> request = RequestEntity.post(new URI(url)).accept(MediaType.APPLICATION_JSON)
-					.body(column);
-			ResponseEntity<HashMap<String, Object>> result = restTemplate.exchange(request, responseType);
+			ResponseEntity<HashMap<String, Object>> result = postColumnForEntity(column, null);
 			HashMap<String, Object> body = result.getBody();
 			assertEquals(HttpStatus.FORBIDDEN, result.getStatusCode());
 			assertNotNull(body.get("error"));
@@ -165,9 +157,7 @@ public class ColumnControllerTest extends AControllerTest {
 		}
 		{
 			// put not found
-			RequestEntity<Column> request = RequestEntity.put(new URI(urlWithId)).accept(MediaType.APPLICATION_JSON)
-					.body(column);
-			ResponseEntity<HashMap<String, Object>> result = restTemplate.exchange(request, responseType);
+			ResponseEntity<HashMap<String, Object>> result = putColumnForEntity(column, null);
 			HashMap<String, Object> body = result.getBody();
 			assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
 			assertNotNull(body.get("error"));
@@ -189,10 +179,7 @@ public class ColumnControllerTest extends AControllerTest {
 
 	@Test
 	public void testPostWithoutProduct() throws URISyntaxException {
-		String url = String.format("http://localhost:%d%s%s", port, contextPath, columnUri);
-		RequestEntity<Column> request = RequestEntity.post(new URI(url)).accept(MediaType.APPLICATION_JSON)
-				.body(column);
-		ResponseEntity<HashMap<String, Object>> result = restTemplate.exchange(request, responseType);
+		ResponseEntity<HashMap<String, Object>> result = postColumnForEntity(column, null);
 		HashMap<String, Object> body = result.getBody();
 		assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
 		assertNotNull(body.get("error"));
@@ -208,7 +195,7 @@ public class ColumnControllerTest extends AControllerTest {
 		}
 		{
 			// post a column
-			restTemplate.postForObject(columnUri, column, Column.class);
+			postColumnForColumn(column, null);
 		}
 		{
 			// delete the product
@@ -237,23 +224,50 @@ public class ColumnControllerTest extends AControllerTest {
 		int columnCountBefore = results.length;
 
 		// post a column
-		Column result = restTemplate.postForObject(columnUri, column, Column.class);
+		Column result = postColumnForColumn(column, null);
 		assertEquals(productId, result.getProductId());
 		assertNotEquals(0, result.getColumnId());
 		assertEquals(columnName, result.getName());
 		assertEquals(columnType, result.getType());
-		assertEquals(columnPoster, result.getPoster());
+		assertNull(result.getPoster());
 		assertEquals(columnLink, result.getLink());
-		
+
 		// get columns from the product
 		results = restTemplate.getForObject(columnUri, Column[].class);
 		assertEquals(columnCountBefore + 1, results.length);
-		
+
 		// delete the column
 		restTemplate.delete(String.format("%s/%d", columnUri, result.getColumnId()));
-		
+
 		// get columns from the product
 		results = restTemplate.getForObject(columnUri, Column[].class);
 		assertEquals(columnCountBefore, results.length);
 	}
+
+	@Test
+	public void testPoster() {
+
+		// post a product
+		restTemplate.postForObject(productUri, product, Product.class);
+
+		// post a column
+		Column result = postColumnForColumn(column, posterFilepath);
+		assertEquals(productId, result.getProductId());
+		assertEquals(columnId, result.getColumnId());
+		assertNotNull(result.getPoster());
+
+		// get the column
+		result = restTemplate.getForObject(columnUriWithId, Column.class);
+		assertEquals(productId, result.getProductId());
+		assertEquals(columnId, result.getColumnId());
+		assertNotNull(result.getPoster());
+
+		// put the column
+		result = putColumnForColumn(column, posterFilepath);
+		assertEquals(productId, result.getProductId());
+		assertEquals(columnId, result.getColumnId());
+		assertNotNull(result.getPoster());
+
+	}
+
 }

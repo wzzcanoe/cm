@@ -30,7 +30,13 @@ public interface ColumnMapper {
 	@Options(useGeneratedKeys = true, keyProperty="columnId", keyColumn="columnId")
 	void insert(Column column);
 
-	@Update("UPDATE column_ SET name=#{name}, type=#{type}, poster=#{poster}, link=#{link}, options=#{options} WHERE productId=#{productId} AND columnId = #{columnId}")
+	@Update("<script>"
+			+ "UPDATE column_ SET name=#{name}, type=#{type}, "
+			+ "<if test='poster != null'>"
+			+ "poster=#{poster}, "
+			+ "</if>"
+			+ "link=#{link}, options=#{options} WHERE productId=#{productId} AND columnId = #{columnId}"
+			+ "</script>")
 	void update(Column column);
 
 	@Delete("DELETE FROM column_ WHERE productId = #{productId} AND columnId = #{columnId}")
