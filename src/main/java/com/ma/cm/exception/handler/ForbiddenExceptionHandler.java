@@ -25,6 +25,7 @@ public class ForbiddenExceptionHandler {
 	@ResponseStatus(value = HttpStatus.FORBIDDEN)
 	@ResponseBody
 	public Map<String, Object> handle(ForbiddenException exception) {
+		// TODO
 		Map<String, Object> result = new HashMap<>();
 		result.put("timestamp", new Date().getTime());
 		result.put("status", HttpStatus.FORBIDDEN.value());

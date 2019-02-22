@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.commons.net.ftp.FTPClient;
-import org.apache.commons.net.ftp.FTPFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -53,6 +52,7 @@ public class FTPClientHelper {
 	public synchronized void uploadFile(String pathname, String fileName, InputStream inputStream) throws IOException {
 		pathname = new String(pathname.getBytes("UTF-8"), "ISO-8859-1");
 		createFtpClient();
+		changeWorkingDirectory("/");
 		try {
 			changeWorkingDirectory(pathname);
 		} catch (IOException e) {
@@ -72,10 +72,6 @@ public class FTPClientHelper {
 	}
 
 	private void makeDirectory(String pathname) throws IOException {
-		FTPFile[] files = ftpClient.listFiles(pathname);
-		if (files.length > 0) {
-			return;
-		}
 		if (!ftpClient.makeDirectory(pathname)) {
 			throw new IOException(String.format("make directory %s on ftp server %s:%d error", pathname, ftp.getHost(), ftp.getPort()));
 		}
@@ -85,6 +81,9 @@ public class FTPClientHelper {
 		FTPClientHelper helper = new FTPClientHelper();
 		InputStream inputStream = new FileInputStream(
 				"D:\\program\\apache-tomcat-9.0.14\\work\\Catalina\\localhost\\cm\\poster.gif");
-		helper.uploadFile("/中国/2/", "poster.gif", inputStream);
+		helper.uploadFile("/product-1/", "poster.gif", inputStream);
+		InputStream inputStream1 = new FileInputStream(
+				"D:\\program\\apache-tomcat-9.0.14\\work\\Catalina\\localhost\\cm\\poster.gif");
+		helper.uploadFile("/product-1/", "poster1.gif", inputStream1);
 	}
 }

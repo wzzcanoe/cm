@@ -43,7 +43,7 @@ public class ColumnController {
 			String originName = file.getOriginalFilename();
 			int last_index_of_dot = originName.lastIndexOf('.');
 			String suffix = originName.substring(last_index_of_dot + 1);
-			String filepath = String.format("/product-%d/column/", column.getProductId());
+			String filepath = String.format("/product-%d/", column.getProductId());
 			String filename = String.format("%s.%s", UUID.randomUUID().toString(), suffix);
 			try {
 				ftpClient.uploadFile(filepath, filename, file.getInputStream());
@@ -73,7 +73,7 @@ public class ColumnController {
 			String originName = file.getOriginalFilename();
 			int last_index_of_dot = originName.lastIndexOf('.');
 			String suffix = originName.substring(last_index_of_dot + 1);
-			String filepath = String.format("/product-%d/column/", column.getProductId());
+			String filepath = String.format("/product-%d/", column.getProductId());
 			String filename = String.format("%s.%s", UUID.randomUUID().toString(), suffix);
 			try {
 				ftpClient.uploadFile(filepath, filename, file.getInputStream());

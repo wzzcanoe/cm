@@ -41,7 +41,7 @@ public class ContentController {
 	public Content save(Content content, @RequestParam(value = "posterFile", required = false) MultipartFile posterFile,
 			@RequestParam(value = "iconFile", required = false) MultipartFile iconFile,
 			@RequestParam(value = "screenShotFile", required = false) MultipartFile screenShotFile) {
-		String filepath = String.format("/product-%d/content/", content.getProductId());
+		String filepath = String.format("/product-%d/", content.getProductId());
 		if (posterFile != null) {
 			String originName = posterFile.getOriginalFilename();
 			int last_index_of_dot = originName.lastIndexOf('.');
@@ -102,7 +102,7 @@ public class ContentController {
 			@RequestParam(value = "posterFile", required = false) MultipartFile posterFile,
 			@RequestParam(value = "iconFile", required = false) MultipartFile iconFile,
 			@RequestParam(value = "screenShotFile", required = false) MultipartFile screenShotFile) {
-		String filepath = String.format("/product-%d/content/", content.getProductId());
+		String filepath = String.format("/product-%d/", content.getProductId());
 		if (posterFile != null) {
 			String originName = posterFile.getOriginalFilename();
 			int last_index_of_dot = originName.lastIndexOf('.');
