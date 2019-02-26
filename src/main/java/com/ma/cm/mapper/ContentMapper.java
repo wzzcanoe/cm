@@ -41,7 +41,7 @@ public interface ContentMapper {
 			+ "<if test='screenShot != null'>"
 			+ "screenShot=#{screenShot}, "
 			+ "</if>"
-			+ "link=#{link}, tip=#{tip}, name=#{name}, options=#{options}"
+			+ "link=#{link}, tip=#{tip}, name=#{name}, options=#{options} "
 			+ "WHERE productId = #{productId} AND contentId = #{contentId}"
 			+ "</script>")
 	void update(Content content);
