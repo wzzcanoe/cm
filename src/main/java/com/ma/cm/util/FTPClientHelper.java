@@ -16,7 +16,7 @@ public class FTPClientHelper {
 
 	private FTP ftp = null;
 	
-	private boolean isChanged = false;
+	private boolean isChanged = true;		// create ftp client every time
 
 	private FTPClient ftpClient = null;
 	
@@ -27,6 +27,7 @@ public class FTPClientHelper {
 	private void createFtpClient() throws IOException {
 		if (ftp == null) {
 			ftp = ftpService.get(FTP.FTP_ID);
+			//ftp = new FTP(1, "112.124.122.227", 21, "cm", "111111");
 		}
 		if (null == ftpClient || isChanged) {
 			boolean ok;
@@ -82,8 +83,8 @@ public class FTPClientHelper {
 		InputStream inputStream = new FileInputStream(
 				"D:\\program\\apache-tomcat-9.0.14\\work\\Catalina\\localhost\\cm\\poster.gif");
 		helper.uploadFile("/product-1/", "poster.gif", inputStream);
-		InputStream inputStream1 = new FileInputStream(
-				"D:\\program\\apache-tomcat-9.0.14\\work\\Catalina\\localhost\\cm\\poster.gif");
-		helper.uploadFile("/product-1/", "poster1.gif", inputStream1);
+//		InputStream inputStream1 = new FileInputStream(
+//				"D:\\program\\apache-tomcat-9.0.14\\work\\Catalina\\localhost\\cm\\poster.gif");
+//		helper.uploadFile("/product-1/", "poster1.gif", inputStream1);
 	}
 }

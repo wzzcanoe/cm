@@ -1,0 +1,99 @@
+#!/bin/bash
+#
+# cm
+#
+# chkconfig: 345 99 25
+# description: cm
+#
+# processname: cm
+# config: 
+# pidfile: /var/run/cm.pid
+
+### BEGIN INIT INFO
+# Provides: cm
+# Required-Start: $local_fs $network $syslog
+# Required-Stop: $local_fs $syslog
+# Should-Start: $syslog
+# Should-Stop: $network $syslog
+# Default-Start: 3 4 5
+# Default-Stop: 0 1 2 6
+# Short-Description: cm
+# Description:       cm
+### END INIT INFO
+
+# source function library
+. /etc/rc.d/init.d/functions
+
+# pull in sysconfig settings
+[ -f /etc/sysconfig/cm ] && . /etc/sysconfig/cm
+
+RETVAL=0
+prog="cm"
+lockfile=/var/lock/subsys/$prog
+
+# Some functions to make the below more readable
+PID_FILE=/var/run/cm.pid
+
+runlevel=$(set -- $(runlevel); eval "echo \$$#" )
+
+
+start()
+{
+	echo -n $"Starting $prog: "
+	(java -jar /home/wzz/cm.jar --server.port=8081&) && success || failure
+	ps -ef | grep /home/wzz/cm| grep -v grep | awk '{print $2}' > $PID_FILE
+	RETVAL=$?
+	[ $RETVAL -eq 0 ] && touch $lockfile
+	echo
+	return $RETVAL
+}
+
+stop()
+{
+	echo -n $"Stopping $prog: "
+	killproc -p $PID_FILE java
+	RETVAL=$?
+	[ $RETVAL -eq 0 ] && rm -f $lockfile
+	echo
+}
+
+restart() {
+	stop
+	start
+}
+
+rh_status() {
+	status -p $PID_FILE java
+}
+
+rh_status_q() {
+	rh_status >/dev/null 2>&1
+}
+
+case "$1" in
+	start)
+		rh_status_q && exit 0
+		start
+		;;
+	stop)
+		if ! rh_status_q; then
+			rm -f $lockfile
+			exit 0
+		fi
+		stop
+		;;
+	restart)
+		restart
+		;;
+	status)
+		rh_status
+		RETVAL=$?
+		if [ $RETVAL -eq 3 -a -f $lockfile ] ; then
+			RETVAL=2
+		fi
+		;;
+	*)
+		echo $"Usage: $0 {start|stop|restart|status}"
+		RETVAL=2
+esac
+exit $RETVAL
